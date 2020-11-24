@@ -1,4 +1,4 @@
-package com.csd.huelight.ui.mainactivity;
+package com.csd.huelight.ui.mainactivity.lightbulblist;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -13,13 +13,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
+import com.csd.huelight.data.LightBulb;
 import com.csd.huelight.data.TempClass;
 
 /**
  * A fragment representing a list of Items.
  */
-public class LightBulbListFragment extends Fragment {
+public class LightBulbListFragment extends Fragment implements LightBulbClickListener {
 
+    private static final String LOGTAG = LightBulbListFragment.class.getName();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,13 +59,19 @@ public class LightBulbListFragment extends Fragment {
             int columns = screenWidthDp / (200);//144 is min width
 
             recyclerView.setLayoutManager(new GridLayoutManager(context, columns));
-            //TODO berekenen hoeveel kollomen voor gridlayout
 
             //TODO een plek maken waar de lampen worden opgeslagen
-            recyclerView.setAdapter(new LightBulbRecyclerViewAdapter(TempClass.LightBulbs));
+            recyclerView.setAdapter(new LightBulbRecyclerViewAdapter(TempClass.LightBulbs, this));
         }
         return view;
     }
 
 
+    @Override
+    public void onClick(LightBulb lightBulb) {
+        //TODO naar detail fragment van deze lightBulb
+        Log.d(LOGTAG, "go to " + lightBulb.getUID());
+        Log.i(LOGTAG, "go to " + lightBulb.getUID());
+
+    }
 }

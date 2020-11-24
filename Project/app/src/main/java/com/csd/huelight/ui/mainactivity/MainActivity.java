@@ -5,8 +5,11 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.csd.huelight.R;
+import com.csd.huelight.ui.mainactivity.lightbulblist.LightBulbListFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String LOGTAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
