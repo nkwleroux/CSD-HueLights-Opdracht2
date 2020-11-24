@@ -33,7 +33,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.lightbulb_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, listener);
     }
 
     @Override
@@ -54,20 +54,43 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public final View mView;
         public final ImageView mIconView;
         public final TextView mNameView;
         public final MaterialCheckBox mOnView;
         public LightBulb mItem;
+        public LightBulbClickListener mLightBulbClickListener;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, LightBulbClickListener lightBulbClickListener) {
             super(view);
             mView = view;
             mIconView = (ImageView) view.findViewById(R.id.iconIV);
             mNameView = (TextView) view.findViewById(R.id.nameTV);
             mOnView = (MaterialCheckBox) view.findViewById(R.id.onCB);
-            mView.setOnClickListener(this);
+            mLightBulbClickListener = lightBulbClickListener;
+            mView.setOnClickListener(
+
+                    (v -> {
+                if (mLightBulbClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        mLightBulbClickListener.onClickPos(getAdapterPosition());
+                    }
+                }
+            }));
+
+            mOnView.setOnClickListener(
+
+                    (v -> {
+                if (mLightBulbClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        mLightBulbClickListener.onCheckClick(position);
+                    }
+                }
+            }));
+
         }
 
         @Override
@@ -75,9 +98,5 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             return super.toString() + " '" + mNameView.getText() + "'";
         }
 
-        @Override
-        public void onClick(View view) {
-            listener.onClick(mItem);
-        }
     }
 }

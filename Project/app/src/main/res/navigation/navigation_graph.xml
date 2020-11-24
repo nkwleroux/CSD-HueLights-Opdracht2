@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/lightBulbListFragment">
+
+    <fragment
+        android:id="@+id/lightBulbListFragment"
+        android:name="com.csd.huelight.ui.mainactivity.lightbulblist.LightBulbListFragment"
+        android:label="lightbulb_list_fragment"
+        tools:layout="@layout/lightbulb_list_fragment" >
+        <action
+            android:id="@+id/action_lightBulbListFragment_to_lightBulbFragment"
+            app:destination="@id/lightBulbFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/lightBulbFragment"
+        android:name="com.csd.huelight.ui.mainactivity.LightBulbFragment"
+        android:label="light_bulb_fragment"
+        tools:layout="@layout/light_bulb_fragment" >
+        <action
+            android:id="@+id/action_lightBulbFragment_to_lightBulbListFragment"
+            app:destination="@id/lightBulbListFragment" />
+    </fragment>
+</navigation>
