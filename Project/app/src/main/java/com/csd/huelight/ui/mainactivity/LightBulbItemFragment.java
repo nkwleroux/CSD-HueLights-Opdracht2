@@ -29,7 +29,7 @@ public class LightBulbItemFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static LightBulbItemFragment newInstance(int columnCount) {
+    public static LightBulbItemFragment newInstance() {
         LightBulbItemFragment fragment = new LightBulbItemFragment();
         return fragment;
     }

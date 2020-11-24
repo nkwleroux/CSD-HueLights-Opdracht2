@@ -12,7 +12,7 @@ public class  TempClass {
 
     static {
         Random random = new Random();
-        for (int count = 0; count < 5; count++) {
+        for (int count = 0; count < 25; count++) {
             LightBulbs.add(new LightBulb("UID"+random.nextInt(), "LightBulb " + count, random.nextBoolean(), (short)random.nextInt(), (byte) random.nextInt(), (byte)random.nextInt(), false));
         }
     }
