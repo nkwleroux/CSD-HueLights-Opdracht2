@@ -6,17 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.mainactivity.MainActivity">
 
-   <FrameLayout
-       android:id="@+id/FrameLayout"
-       android:layout_width="match_parent"
-       android:layout_height="0dp"
-       app:layout_constraintBottom_toTopOf="@id/label"/>
+    <FrameLayout
+        android:id="@+id/FrameLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Made by Nicholas and Shinichi"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAlignment="textEnd"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
