@@ -1,6 +1,8 @@
 package com.csd.huelight.data;
 
-public class LightBulb {
+import java.io.Serializable;
+
+public class LightBulb implements Serializable {
     private final String UID;
     private String name;
     private boolean on;
