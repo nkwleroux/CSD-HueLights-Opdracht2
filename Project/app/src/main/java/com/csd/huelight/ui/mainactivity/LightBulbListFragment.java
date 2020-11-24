@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
@@ -17,20 +16,20 @@ import com.csd.huelight.data.TempClass;
 /**
  * A fragment representing a list of Items.
  */
-public class LightBulbItemFragment extends Fragment {
+public class LightBulbListFragment extends Fragment {
 
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public LightBulbItemFragment() {
+    public LightBulbListFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static LightBulbItemFragment newInstance() {
-        LightBulbItemFragment fragment = new LightBulbItemFragment();
+    public static LightBulbListFragment newInstance() {
+        LightBulbListFragment fragment = new LightBulbListFragment();
         return fragment;
     }
 
@@ -42,7 +41,7 @@ public class LightBulbItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.lightbulb_list_fragment, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

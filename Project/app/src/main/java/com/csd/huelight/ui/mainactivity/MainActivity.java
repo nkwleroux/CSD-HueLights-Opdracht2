@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.FrameLayout, LightBulbItemFragment.newInstance())
+                .replace(R.id.FrameLayout, LightBulbListFragment.newInstance())
                 .commit();
     }
 }
