@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.csd.huelight.R;
-import com.csd.huelight.ui.mainactivity.dummy.DummyContent;
+import com.csd.huelight.data.TempClass;
 
 /**
  * A fragment representing a list of Items.
@@ -65,7 +65,8 @@ public class LightBulbItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyLightBulbItemRecyclerViewAdapter(DummyContent.ITEMS));
+            //TODO een plek maken waar de lampen worden opgeslagen
+            recyclerView.setAdapter(new LightBulbRecyclerViewAdapter(TempClass.LightBulbs));
         }
         return view;
     }

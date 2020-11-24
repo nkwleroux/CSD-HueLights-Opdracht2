@@ -8,19 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.csd.huelight.R;
-import com.csd.huelight.ui.mainactivity.dummy.DummyContent.DummyItem;
+import com.csd.huelight.data.LightBulb;
 
 import java.util.List;
 
+
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyLightBulbItemRecyclerViewAdapter extends RecyclerView.Adapter<MyLightBulbItemRecyclerViewAdapter.ViewHolder> {
+public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulbRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<LightBulb> mValues;
 
-    public MyLightBulbItemRecyclerViewAdapter(List<DummyItem> items) {
+    public LightBulbRecyclerViewAdapter(List<LightBulb> items) {
         mValues = items;
     }
 
@@ -34,8 +34,8 @@ public class MyLightBulbItemRecyclerViewAdapter extends RecyclerView.Adapter<MyL
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getName());
+//        holder.mContentView.setText(mValues.get(position).content);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MyLightBulbItemRecyclerViewAdapter extends RecyclerView.Adapter<MyL
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public LightBulb mItem;
 
         public ViewHolder(View view) {
             super(view);
