@@ -43,6 +43,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         Picasso.get()
                 .load(R.drawable.ic_baseline_highlight_24)
                 .placeholder(R.drawable.ic_baseline_sync_24)
+                .error(R.drawable.ic_baseline_error_outline_24)
                 .into(holder.mIconView);
     }
 

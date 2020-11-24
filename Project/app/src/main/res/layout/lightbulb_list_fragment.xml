@@ -6,8 +6,7 @@
     android:name="com.csd.huelight.ui.mainactivity.LightBulbItemFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
+    android:padding="4dp"
     tools:context=".ui.mainactivity.LightBulbListFragment"
-    tools:listitem="@layout/lightBulb_item" />
+    tools:listitem="@layout/lightbulb_item" />
