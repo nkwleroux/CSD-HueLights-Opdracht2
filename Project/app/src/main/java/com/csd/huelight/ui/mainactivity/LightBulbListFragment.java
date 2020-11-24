@@ -1,7 +1,9 @@
 package com.csd.huelight.ui.mainactivity;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +49,14 @@ public class LightBulbListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+
+            Configuration configuration = getResources().getConfiguration();
+            int screenWidthDp = configuration.screenWidthDp;
+//            screenWidthDp -= 16;//padding
+
+            int columns = screenWidthDp / (200);//144 is min width
+
+            recyclerView.setLayoutManager(new GridLayoutManager(context, columns));
             //TODO berekenen hoeveel kollomen voor gridlayout
 
             //TODO een plek maken waar de lampen worden opgeslagen
