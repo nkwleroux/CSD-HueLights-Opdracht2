@@ -3,7 +3,6 @@ package com.csd.huelight.ui.mainactivity.lightbulblist;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +45,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     public static LightBulbListFragment newInstance() {
         LightBulbListFragment fragment = new LightBulbListFragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
