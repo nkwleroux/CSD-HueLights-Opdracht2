@@ -84,6 +84,7 @@ public class LightBulb implements Serializable {
         this.colorLoop = colorLoop;
     }
 
+
     public boolean completeEqual(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -94,6 +95,7 @@ public class LightBulb implements Serializable {
                 brightness == lightBulb.brightness &&
                 colorLoop == lightBulb.colorLoop &&
                 Objects.equals(UID, lightBulb.UID) &&
+                Objects.equals(id, lightBulb.id) &&
                 Objects.equals(name, lightBulb.name);
     }
 
@@ -105,7 +107,9 @@ public class LightBulb implements Serializable {
         return UID.equals(lightBulb.UID);
     }
 
+
     public void setSettings(LightBulb lightBulb){
+        this.id = lightBulb.id;
         this.name = lightBulb.name;
         this.on = lightBulb.on;
         this.hue = lightBulb.hue;
