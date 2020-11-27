@@ -3,6 +3,7 @@ package com.csd.huelight.ui.mainactivity.lightbulblist;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,9 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
             lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), new Observer<List<LightBulb>>() {
                 @Override
                 public void onChanged(List<LightBulb> lightBulbs) {
+                    Log.d(LOGTAG, "lightBulbs changed " + lightBulbs.size());
+                    lightBulbRecyclerViewAdapter.getLightBulbs().clear();
+                    lightBulbRecyclerViewAdapter.getLightBulbs().addAll(lightBulbs);
                     lightBulbRecyclerViewAdapter.notifyDataSetChanged();
                 }
             });

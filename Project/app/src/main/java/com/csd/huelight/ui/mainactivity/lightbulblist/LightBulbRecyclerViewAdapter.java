@@ -29,6 +29,10 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         this.listener = listener;
     }
 
+    public List<LightBulb> getLightBulbs() {
+        return mValues;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())

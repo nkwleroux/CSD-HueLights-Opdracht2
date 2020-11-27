@@ -1,22 +1,25 @@
 package com.csd.huelight.ui.mainactivity;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.csd.huelight.Util.Observable;
+import com.csd.huelight.Util.Observer;
 import com.csd.huelight.data.APIManager;
 import com.csd.huelight.data.LightBulb;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 //View models should not hold reference to context/activity/fragment/view
 
 public class LightBulbViewModel extends ViewModel implements Observer {
     // TODO: Implement the ViewModel
 
+    private static final String LOGTAG = LightBulbViewModel.class.getName();
 
     private MutableLiveData<List<LightBulb>> lightBulbs;
     private APIManager apiManager;
@@ -27,8 +30,8 @@ public class LightBulbViewModel extends ViewModel implements Observer {
         }
         apiManager = apiManager.getInstance();
         apiManager.retrieveLightBulbs();
+        apiManager.addObserver(this);
         lightBulbs = new MutableLiveData<>(new ArrayList<>());
-        apiManager.addObserver(this::update);
     }
 
     public LiveData<List<LightBulb>> getLightBulbs() {
@@ -42,9 +45,10 @@ public class LightBulbViewModel extends ViewModel implements Observer {
     }
 
     @Override
-    public void update(Observable observable, Object o) {
-        if (observable.getClass() == APIManager.class) {
-            lightBulbs.postValue(((APIManager) observable).getLightBulbs());
+    public void update(Observable source) {
+        if (source instanceof APIManager) {
+            Log.d(LOGTAG, "lightBulbs changed " + ((APIManager) source).getLightBulbs().size());
+            this.lightBulbs.postValue(((APIManager) source).getLightBulbs());
         }
     }
 }
