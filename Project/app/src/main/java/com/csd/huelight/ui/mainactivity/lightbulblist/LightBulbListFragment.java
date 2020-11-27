@@ -69,7 +69,7 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
             lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) ->
                     lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs));
 
-            lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this);
+            lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this, lightBulbViewModel);
 
             //TODO een plek maken waar de lampen worden opgeslagen
             recyclerView.setAdapter(lightBulbRecyclerViewAdapter);
@@ -83,6 +83,11 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         lightBulbViewModel.retrieveLightBulbs();
     }
 
@@ -92,13 +97,5 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
         Bundle bundle = new Bundle();
         bundle.putInt("lightbulb",position);
         navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
-    }
-
-    @Override
-    public void onCheckClick(int position) {
-        LightBulb lightBulb = lightBulbViewModel.getLightBulbs().getValue().get(position);
-        CheckBox checkBox = getActivity().findViewById(R.id.onCB);
-        lightBulb.setOn(checkBox.isChecked());
-        lightBulbViewModel.setLightBulbState(lightBulb);
     }
 }

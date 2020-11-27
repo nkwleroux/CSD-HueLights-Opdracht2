@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
 import com.csd.huelight.data.LightBulb;
+import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.squareup.picasso.Picasso;
 
@@ -26,11 +27,14 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 
     private final List<LightBulb> mValues;
     private LightBulbClickListener listener;
+    private LightBulbViewModel lightBulbViewModel;
 
-    public LightBulbRecyclerViewAdapter(List<LightBulb> items, LightBulbClickListener listener) {
-        mValues = items;
+    public LightBulbRecyclerViewAdapter(List<LightBulb> items, LightBulbClickListener listener, LightBulbViewModel lightBulbViewModel) {
+        this.mValues = items;
         this.listener = listener;
+        this.lightBulbViewModel = lightBulbViewModel;
     }
+
 
     public void updateLightBulbs(List<LightBulb> lightBulbs) {
         //ugliest code in the land
@@ -59,7 +63,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 //            notifyDataSetChanged();
 //        }
         Log.i(LOGTAG, "updating lightBulbs " + lightBulbs.size());
-        for (LightBulb l : lightBulbs){
+        for (LightBulb l : lightBulbs) {
             Log.i(LOGTAG, l.toString());
         }
 
@@ -72,7 +76,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.lightbulb_item, parent, false);
-        return new ViewHolder(view, listener);
+        return new ViewHolder(view, listener, lightBulbViewModel);
     }
 
     @Override
@@ -93,7 +97,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mIconView;
         public final TextView mNameView;
@@ -101,7 +105,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         public LightBulb mItem;
         public LightBulbClickListener mLightBulbClickListener;
 
-        public ViewHolder(View view, LightBulbClickListener lightBulbClickListener) {
+        public ViewHolder(View view, LightBulbClickListener lightBulbClickListener, LightBulbViewModel lightBulbViewModel) {
             super(view);
             mView = view;
             mIconView = (ImageView) view.findViewById(R.id.iconIV);
@@ -110,23 +114,24 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             mLightBulbClickListener = lightBulbClickListener;
             mView.setOnClickListener(
                     (v -> {
-                if (mLightBulbClickListener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        mLightBulbClickListener.onClickPos(getAdapterPosition());
-                    }
-                }
-            }));
+                        if (mLightBulbClickListener != null) {
+                            int position = getAdapterPosition();
+                            if (position != RecyclerView.NO_POSITION) {
+                                mLightBulbClickListener.onClickPos(getAdapterPosition());
+                            }
+                        }
+                    }));
 
             mOnView.setOnClickListener(
                     (v -> {
-                if (mLightBulbClickListener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        mLightBulbClickListener.onCheckClick(position);
-                    }
-                }
-            }));
+                        if (mLightBulbClickListener != null) {
+                            int position = getAdapterPosition();
+                            if (position != RecyclerView.NO_POSITION) {
+                                mItem.setOn(((MaterialCheckBox) v).isChecked());
+                                lightBulbViewModel.setLightBulbState(mItem);
+                            }
+                        }
+                    }));
 
         }
 
