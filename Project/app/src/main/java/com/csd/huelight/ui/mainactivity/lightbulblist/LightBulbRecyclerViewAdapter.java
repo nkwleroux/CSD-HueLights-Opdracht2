@@ -29,6 +29,31 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         this.listener = listener;
     }
 
+    public void updateLightBulbs(List<LightBulb> lightBulbs) {
+        //ugliest code in the land
+        boolean updated = false;
+        for (LightBulb lightBulb : lightBulbs){
+            if (mValues.contains(lightBulb)){
+                for (LightBulb oldLightBulb : mValues){
+                    if (lightBulb.equals(oldLightBulb)){
+                        if (!lightBulb.completeEqual(oldLightBulb)){
+                            oldLightBulb.setSettings(lightBulb);
+                            updated = true;
+                        }
+                        break;
+                    }
+                }
+            }else {
+                mValues.add(lightBulb);
+                updated = true;
+            }
+        }
+
+        if (updated){
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -70,7 +95,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             mOnView = (MaterialCheckBox) view.findViewById(R.id.onCB);
             mLightBulbClickListener = lightBulbClickListener;
             mView.setOnClickListener(
-
                     (v -> {
                 if (mLightBulbClickListener != null) {
                     int position = getAdapterPosition();
@@ -81,7 +105,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             }));
 
             mOnView.setOnClickListener(
-
                     (v -> {
                 if (mLightBulbClickListener != null) {
                     int position = getAdapterPosition();
