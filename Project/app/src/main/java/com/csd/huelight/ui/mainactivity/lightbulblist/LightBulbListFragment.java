@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
-import com.csd.huelight.data.LightBulb;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 
 /**
@@ -29,6 +27,7 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     private static final String LOGTAG = LightBulbListFragment.class.getName();
     private LightBulbViewModel lightBulbViewModel;
     private LightBulbRecyclerViewAdapter lightBulbRecyclerViewAdapter;
+    private NavController navController;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -38,10 +37,8 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     }
 
     // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static LightBulbListFragment newInstance() {
-        LightBulbListFragment fragment = new LightBulbListFragment();
-        return fragment;
+        return new LightBulbListFragment();
     }
 
     @Override
@@ -77,8 +74,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
         return view;
     }
 
-    private NavController navController;
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,7 +83,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
 
     @Override
     public void onClickPos(int position) {
-        //TODO can change bundle method. Can pass through only posistion and it would work.
         Bundle bundle = new Bundle();
         bundle.putInt("lightbulb",position);
         navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);

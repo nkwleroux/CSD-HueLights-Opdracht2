@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +39,8 @@ public class APIManager extends Observable {
 
     private List<LightBulb> _lightBulbs;
 
-    private String ip = "192.168.178.25";
+    //Same as 127.0.0.1 or LocalHost
+    private String ip = "10.0.2.2";
     private int port = 8000;
     private String username = "newdeveloper";
 
@@ -120,7 +123,7 @@ public class APIManager extends Observable {
                 body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
             }
 
-            RequestBody requestBody = RequestBody.create(body.toString(),JSON);
+            RequestBody requestBody = RequestBody.create(JSON, body.toString());
             Request request = new Request.Builder()
                     .url(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state")
                     .put(requestBody)
@@ -148,6 +151,7 @@ public class APIManager extends Observable {
         }
     }
 
+    //Test method to add lamps to UI.
     public List<LightBulb> getRandomLightBulbs(int amount) {
         List<LightBulb> lightBulbs = new ArrayList<>();
         Random random = new Random();

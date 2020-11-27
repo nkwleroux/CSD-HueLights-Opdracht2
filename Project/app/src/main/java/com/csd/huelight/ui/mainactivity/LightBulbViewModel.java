@@ -17,7 +17,6 @@ import java.util.List;
 //View models should not hold reference to context/activity/fragment/view
 
 public class LightBulbViewModel extends ViewModel implements Observer {
-    // TODO: Implement the ViewModel
 
     private static final String LOGTAG = LightBulbViewModel.class.getName();
 
@@ -36,12 +35,6 @@ public class LightBulbViewModel extends ViewModel implements Observer {
 
     public LiveData<List<LightBulb>> getLightBulbs() {
         return lightBulbs;
-    }
-
-    //TODO
-    @Override
-    protected void onCleared() {
-        super.onCleared();
     }
 
     @Override

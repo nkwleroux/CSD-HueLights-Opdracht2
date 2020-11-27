@@ -1,4 +1,4 @@
-package com.csd.huelight.ui.mainactivity;
+package com.csd.huelight.ui.mainactivity.lightbulbdetail;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,12 +16,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.csd.huelight.R;
 import com.csd.huelight.data.LightBulb;
+import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 
 public class LightBulbFragment extends Fragment {
 
     private LightBulbViewModel lightBulbViewModel;
+    private LightBulb lightBulb;
 
     public static LightBulbFragment newInstance() {
         return new LightBulbFragment();
@@ -34,14 +35,11 @@ public class LightBulbFragment extends Fragment {
         return inflater.inflate(R.layout.light_bulb_fragment, container, false);
     }
 
-    LightBulb lightBulb = null;
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         this.lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
-        // TODO: Use the ViewModel
 
         int position = getArguments().getInt("lightbulb");
         lightBulb = lightBulbViewModel.getLightBulbs().getValue().get(position);
@@ -53,8 +51,7 @@ public class LightBulbFragment extends Fragment {
         name.setText(lightBulb.getName());
         name.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             //TODO need to send message with new name. Need to check on enter input.
             @Override
@@ -63,8 +60,7 @@ public class LightBulbFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-            }
+            public void afterTextChanged(Editable editable) {}
         });
 
         Chip chipPower = getActivity().findViewById(R.id.chipOn);
@@ -74,9 +70,7 @@ public class LightBulbFragment extends Fragment {
             lightBulbViewModel.setLightBulbState(lightBulb);
         });
 
-        //TODO hue/brightness/saturation
         Slider sliderHue = getActivity().findViewById(R.id.sliderHue);
-//        sliderHue.setValue(lightBulb.getHue());
         sliderHue.setValue(lightBulb.getHue());
         sliderHue.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override

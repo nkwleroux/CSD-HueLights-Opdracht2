@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/lightBulbFragment"
-        android:name="com.csd.huelight.ui.mainactivity.LightBulbFragment"
+        android:name="com.csd.huelight.ui.mainactivity.lightbulbdetail.LightBulbFragment"
         android:label="light_bulb_fragment"
         tools:layout="@layout/light_bulb_fragment" >
         <action
