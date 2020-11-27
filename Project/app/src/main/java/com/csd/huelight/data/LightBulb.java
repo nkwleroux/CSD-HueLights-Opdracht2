@@ -1,6 +1,7 @@
 package com.csd.huelight.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class LightBulb implements Serializable {
     private final String UID;
@@ -72,5 +73,35 @@ public class LightBulb implements Serializable {
 
     public void setColorLoop(boolean colorLoop) {
         this.colorLoop = colorLoop;
+    }
+
+    public boolean completeEqual(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LightBulb lightBulb = (LightBulb) o;
+        return on == lightBulb.on &&
+                hue == lightBulb.hue &&
+                saturation == lightBulb.saturation &&
+                brightness == lightBulb.brightness &&
+                colorLoop == lightBulb.colorLoop &&
+                Objects.equals(UID, lightBulb.UID) &&
+                Objects.equals(name, lightBulb.name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LightBulb lightBulb = (LightBulb) o;
+        return UID.equals(lightBulb.UID);
+    }
+
+    public void setSettings(LightBulb lightBulb){
+        this.name = lightBulb.name;
+        this.on = lightBulb.on;
+        this.hue = lightBulb.hue;
+        this.saturation = lightBulb.saturation;
+        this.brightness = lightBulb.brightness;
+        this.colorLoop = lightBulb.colorLoop;
     }
 }
