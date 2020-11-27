@@ -50,4 +50,12 @@ public class LightBulbViewModel extends ViewModel implements Observer {
             this.lightBulbs.postValue(((APIManager) source).getLightBulbs());
         }
     }
+
+    public void retrieveLightBulbs(){
+        this.apiManager.retrieveLightBulbs();
+    }
+
+    public void setLightBulbState(LightBulb lightBulb){
+        this.apiManager.setLightBulbState(lightBulb);
+    }
 }

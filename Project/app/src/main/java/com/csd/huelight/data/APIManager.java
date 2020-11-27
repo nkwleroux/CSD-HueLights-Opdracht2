@@ -16,8 +16,10 @@ import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class APIManager extends Observable {
@@ -26,6 +28,9 @@ public class APIManager extends Observable {
     //Uses singleton pattern
 
     private static final String LOGTAG = APIManager.class.getName();
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
 
     private static APIManager apiManagerInstance;
     private OkHttpClient client;
@@ -64,7 +69,7 @@ public class APIManager extends Observable {
         this.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(LOGTAG, "http failure", e);
+                Log.d(LOGTAG, "http failure, get bulbs", e);
                 e.printStackTrace();
             }
 
@@ -82,11 +87,12 @@ public class APIManager extends Observable {
                             JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
                             lightBulbs.add(new LightBulb(
                                     lightBulbJson.getString("uniqueid"),
+                                    names.get(i).toString(),
                                     lightBulbJson.getString("name"),
                                     lightBulbStateJson.getBoolean("on"),
-                                    (short) lightBulbStateJson.getInt("hue"),
-                                    (byte) lightBulbStateJson.getInt("sat"),
-                                    (byte) lightBulbStateJson.getInt("bri"),
+                                    lightBulbStateJson.getInt("hue"),
+                                    (short) lightBulbStateJson.getInt("sat"),
+                                    (short) lightBulbStateJson.getInt("bri"),
                                     (lightBulbStateJson.getString("effect").equals("colorloop"))));
                         }
 
@@ -95,9 +101,51 @@ public class APIManager extends Observable {
                     } catch (JSONException e) {
                         Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
                     }
+                }else {
+                    //uuuuh
                 }
             }
         });
+    }
+
+    public void setLightBulbState(LightBulb lightBulb) {
+        Log.d(LOGTAG, "setting state " + lightBulb);
+        try {
+            JSONObject body = new JSONObject();
+            body.put("on", lightBulb.isOn());
+            if (lightBulb.isOn()) {
+                body.put("hue", lightBulb.getHue());
+                body.put("sat", lightBulb.getSaturation());
+                body.put("bri", lightBulb.getBrightness());
+                body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
+            }
+
+            RequestBody requestBody = RequestBody.create(body.toString(),JSON);
+            Request request = new Request.Builder()
+                    .url(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state")
+                    .put(requestBody)
+                    .build();
+
+            this.client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Log.d(LOGTAG, "http failure, set bulb state", e);
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (response.isSuccessful()){
+                        Log.d(LOGTAG, "set state successful");
+                        retrieveLightBulbs();
+                    }else {
+                        //uuuuh
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public List<LightBulb> getRandomLightBulbs(int amount) {
@@ -106,6 +154,7 @@ public class APIManager extends Observable {
         for (int count = 1; count <= amount; count++) {
             lightBulbs.add(new LightBulb(
                     "UID : " + Math.abs(random.nextInt()),
+                    "" + random.nextInt(),
                     "LightBulb " + count,
                     random.nextBoolean(),
                     (int) Math.abs(random.nextInt(65535)),
