@@ -83,6 +83,7 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+        lightBulbViewModel.retrieveLightBulbs();
     }
 
     @Override

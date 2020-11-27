@@ -82,6 +82,7 @@ public class APIManager extends Observable {
                             JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
                             lightBulbs.add(new LightBulb(
                                     lightBulbJson.getString("uniqueid"),
+                                    names.get(i).toString(),
                                     lightBulbJson.getString("name"),
                                     lightBulbStateJson.getBoolean("on"),
                                     (short) lightBulbStateJson.getInt("hue"),
@@ -100,12 +101,24 @@ public class APIManager extends Observable {
         });
     }
 
+    public void setLightBulbState(LightBulb lightBulb) {
+//        try {
+//            Request request = new Request.Builder()
+//                    .url(getHTTRequest() + "/lights/" + lightBulb.getUID() + "/state")
+//                    .put()
+//                    .build();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
     public List<LightBulb> getRandomLightBulbs(int amount) {
         List<LightBulb> lightBulbs = new ArrayList<>();
         Random random = new Random();
         for (int count = 1; count <= amount; count++) {
             lightBulbs.add(new LightBulb(
                     "UID" + random.nextInt(),
+                    "" + random.nextInt(),
                     "LightBulb " + count,
                     random.nextBoolean(),
                     (short) random.nextInt(),
