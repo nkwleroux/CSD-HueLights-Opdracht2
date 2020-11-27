@@ -70,7 +70,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             mOnView = (MaterialCheckBox) view.findViewById(R.id.onCB);
             mLightBulbClickListener = lightBulbClickListener;
             mView.setOnClickListener(
-
                     (v -> {
                 if (mLightBulbClickListener != null) {
                     int position = getAdapterPosition();
@@ -81,7 +80,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
             }));
 
             mOnView.setOnClickListener(
-
                     (v -> {
                 if (mLightBulbClickListener != null) {
                     int position = getAdapterPosition();
