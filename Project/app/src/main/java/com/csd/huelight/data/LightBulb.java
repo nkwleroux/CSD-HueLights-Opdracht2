@@ -13,7 +13,7 @@ public class LightBulb implements Serializable {
     private short brightness;
     private boolean colorLoop;
 
-    public LightBulb(String UID,String id, String name, boolean on, short hue, byte saturation, byte brightness, boolean colorLoop) {
+    public LightBulb(String UID,String id, String name, boolean on, int hue, short saturation, short brightness, boolean colorLoop) {
         this.UID = UID;
         this.id = id;
         this.name = name;
