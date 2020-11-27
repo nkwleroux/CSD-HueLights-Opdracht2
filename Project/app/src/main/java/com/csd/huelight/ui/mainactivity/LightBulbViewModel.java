@@ -29,8 +29,8 @@ public class LightBulbViewModel extends ViewModel implements Observer {
             return;
         }
         apiManager = apiManager.getInstance();
-        apiManager.retrieveLightBulbs();
         apiManager.addObserver(this);
+        apiManager.retrieveLightBulbs();
         lightBulbs = new MutableLiveData<>(new ArrayList<>());
     }
 
@@ -47,7 +47,6 @@ public class LightBulbViewModel extends ViewModel implements Observer {
     @Override
     public void update(Observable source) {
         if (source instanceof APIManager) {
-            Log.d(LOGTAG, "lightBulbs changed " + ((APIManager) source).getLightBulbs().size());
             this.lightBulbs.postValue(((APIManager) source).getLightBulbs());
         }
     }

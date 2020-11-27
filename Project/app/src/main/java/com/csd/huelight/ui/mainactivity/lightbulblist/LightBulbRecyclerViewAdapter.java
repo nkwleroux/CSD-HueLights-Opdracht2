@@ -29,8 +29,29 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
         this.listener = listener;
     }
 
-    public List<LightBulb> getLightBulbs() {
-        return mValues;
+    public void updateLightBulbs(List<LightBulb> lightBulbs) {
+        //ugliest code in the land
+        boolean updated = false;
+        for (LightBulb lightBulb : lightBulbs){
+            if (mValues.contains(lightBulb)){
+                for (LightBulb oldLightBulb : mValues){
+                    if (lightBulb.equals(oldLightBulb)){
+                        if (!lightBulb.completeEqual(oldLightBulb)){
+                            oldLightBulb.setSettings(lightBulb);
+                            updated = true;
+                        }
+                        break;
+                    }
+                }
+            }else {
+                mValues.add(lightBulb);
+                updated = true;
+            }
+        }
+
+        if (updated){
+            notifyDataSetChanged();
+        }
     }
 
     @Override

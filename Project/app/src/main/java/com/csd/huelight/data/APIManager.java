@@ -48,11 +48,6 @@ public class APIManager extends Observable {
         this._lightBulbs = new ArrayList<>();
     }
 
-    //supposed data retrieval
-//    public LiveData<List<LightBulb>> getLiveDataLightBulbs() {
-//        return _lightBulbs;
-//    }
-
     public List<LightBulb> getLightBulbs() {
         return _lightBulbs;
     }
@@ -96,7 +91,6 @@ public class APIManager extends Observable {
                         }
 
                         _lightBulbs = lightBulbs;
-                        Log.d(LOGTAG, "notifying observers " + _lightBulbs.size());
                         notifyObservers();
                     } catch (JSONException e) {
                         Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);

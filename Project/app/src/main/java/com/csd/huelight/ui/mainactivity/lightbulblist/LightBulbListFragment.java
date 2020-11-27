@@ -3,7 +3,6 @@ package com.csd.huelight.ui.mainactivity.lightbulblist;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.csd.huelight.R;
 import com.csd.huelight.data.LightBulb;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -70,15 +66,8 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
 
             lightBulbViewModel.init();
 
-            lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), new Observer<List<LightBulb>>() {
-                @Override
-                public void onChanged(List<LightBulb> lightBulbs) {
-                    Log.d(LOGTAG, "lightBulbs changed " + lightBulbs.size());
-                    lightBulbRecyclerViewAdapter.getLightBulbs().clear();
-                    lightBulbRecyclerViewAdapter.getLightBulbs().addAll(lightBulbs);
-                    lightBulbRecyclerViewAdapter.notifyDataSetChanged();
-                }
-            });
+            lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) ->
+                    lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs));
 
             lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this);
 
