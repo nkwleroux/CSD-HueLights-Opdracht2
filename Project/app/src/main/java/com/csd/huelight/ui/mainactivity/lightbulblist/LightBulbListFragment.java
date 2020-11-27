@@ -88,10 +88,9 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
 
     @Override
     public void onClickPos(int position) {
-        //TODO
+        //TODO can change bundle method. Can pass through only posistion and it would work.
         Bundle bundle = new Bundle();
-        LightBulb lightBulb = lightBulbViewModel.getLightBulbs().getValue().get(position);
-        bundle.putSerializable("lightbulb", lightBulb);
+        bundle.putInt("lightbulb",position);
         navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
     }
 

@@ -153,14 +153,14 @@ public class APIManager extends Observable {
         Random random = new Random();
         for (int count = 1; count <= amount; count++) {
             lightBulbs.add(new LightBulb(
-                    "UID" + random.nextInt(),
+                    "UID : " + Math.abs(random.nextInt()),
                     "" + random.nextInt(),
                     "LightBulb " + count,
                     random.nextBoolean(),
-                    (short) random.nextInt(),
-                    (byte) random.nextInt(),
-                    (byte) random.nextInt(),
-                    false));
+                    (int) Math.abs(random.nextInt(65535)),
+                    (short) Math.abs(random.nextInt(254)),
+                    (short) Math.abs(random.nextInt(254)),
+                    random.nextBoolean()));
         }
         return lightBulbs;
     }

@@ -8,9 +8,9 @@ public class LightBulb implements Serializable {
     private String id;
     private String name;
     private boolean on;
-    private short hue;
-    private byte saturation;
-    private byte brightness;
+    private int hue;
+    private short saturation;
+    private short brightness;
     private boolean colorLoop;
 
     public LightBulb(String UID,String id, String name, boolean on, short hue, byte saturation, byte brightness, boolean colorLoop) {
@@ -52,27 +52,27 @@ public class LightBulb implements Serializable {
         this.on = on;
     }
 
-    public short getHue() {
+    public int getHue() {
         return hue;
     }
 
-    public void setHue(short hue) {
+    public void setHue(int hue) {
         this.hue = hue;
     }
 
-    public byte getSaturation() {
+    public short getSaturation() {
         return saturation;
     }
 
-    public void setSaturation(byte saturation) {
+    public void setSaturation(short saturation) {
         this.saturation = saturation;
     }
 
-    public byte getBrightness() {
+    public short getBrightness() {
         return brightness;
     }
 
-    public void setBrightness(byte brightness) {
+    public void setBrightness(short brightness) {
         this.brightness = brightness;
     }
 
