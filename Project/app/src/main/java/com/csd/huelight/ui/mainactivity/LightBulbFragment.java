@@ -69,8 +69,10 @@ public class LightBulbFragment extends Fragment {
 
         Chip chipPower = getActivity().findViewById(R.id.chipOn);
         SetChipState("chipPower", chipPower, lightBulb.isOn());
-        chipPower.setOnCheckedChangeListener((compoundButton, isChecked) ->
-                SetChipState("chipPower", chipPower, isChecked));
+        chipPower.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            SetChipState("chipPower", chipPower, isChecked);
+            lightBulbViewModel.setLightBulbState(lightBulb);
+        });
 
         //TODO hue/brightness/saturation
         Slider sliderHue = getActivity().findViewById(R.id.sliderHue);
@@ -117,8 +119,10 @@ public class LightBulbFragment extends Fragment {
 
         Chip chipColorLoop = getActivity().findViewById(R.id.chipColorloop);
         SetChipState("chipColorLoop", chipColorLoop, lightBulb.isColorLoop());
-        chipColorLoop.setOnCheckedChangeListener((compoundButton, isChecked) ->
-                SetChipState("chipColorLoop", chipColorLoop, isChecked));
+        chipColorLoop.setOnCheckedChangeListener((compoundButton, isChecked) ->{
+                SetChipState("chipColorLoop", chipColorLoop, isChecked);
+            lightBulbViewModel.setLightBulbState(lightBulb);
+        });
     }
 
     private void SetChipState(String chipName, Chip chip, boolean state) {
@@ -141,7 +145,6 @@ public class LightBulbFragment extends Fragment {
                 }
                 break;
         }
-        lightBulbViewModel.setLightBulbState(lightBulb);
     }
 
 }

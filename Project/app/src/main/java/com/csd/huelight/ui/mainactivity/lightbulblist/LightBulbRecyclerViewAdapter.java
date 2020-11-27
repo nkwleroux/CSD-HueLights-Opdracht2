@@ -38,7 +38,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 
     public void updateLightBulbs(List<LightBulb> lightBulbs) {
         //ugliest code in the land
-        //TODO this doesn't handle removed lightBulbs
 //        boolean updated = false;
 //        for (LightBulb lightBulb : lightBulbs){
 //            if (mValues.contains(lightBulb)){
@@ -63,9 +62,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 //            notifyDataSetChanged();
 //        }
         Log.i(LOGTAG, "updating lightBulbs " + lightBulbs.size());
-        for (LightBulb l : lightBulbs) {
-            Log.i(LOGTAG, l.toString());
-        }
 
         mValues.clear();
         mValues.addAll(lightBulbs);
