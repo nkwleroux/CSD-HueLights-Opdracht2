@@ -99,5 +99,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
         LightBulb lightBulb = lightBulbViewModel.getLightBulbs().getValue().get(position);
         CheckBox checkBox = getActivity().findViewById(R.id.onCB);
         lightBulb.setOn(checkBox.isChecked());
+        lightBulbViewModel.setLightBulbState(lightBulb);
     }
 }

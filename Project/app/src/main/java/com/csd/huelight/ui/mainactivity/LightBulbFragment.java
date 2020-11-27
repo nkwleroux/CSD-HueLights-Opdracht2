@@ -22,6 +22,8 @@ import com.google.android.material.slider.Slider;
 
 public class LightBulbFragment extends Fragment {
 
+    private LightBulbViewModel lightBulbViewModel;
+
     public static LightBulbFragment newInstance() {
         return new LightBulbFragment();
     }
@@ -38,7 +40,7 @@ public class LightBulbFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
+        this.lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
         // TODO: Use the ViewModel
 
         int position = getArguments().getInt("lightbulb");
@@ -81,6 +83,7 @@ public class LightBulbFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 lightBulb.setHue((int) Math.abs(slider.getValue()));
+                lightBulbViewModel.setLightBulbState(lightBulb);
             }
         });
 
@@ -94,6 +97,7 @@ public class LightBulbFragment extends Fragment {
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 int value = (int) Math.abs(slider.getValue());
                 lightBulb.setSaturation((short) value);
+                lightBulbViewModel.setLightBulbState(lightBulb);
             }
         });
 
@@ -107,6 +111,7 @@ public class LightBulbFragment extends Fragment {
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 int value = (int) Math.abs(slider.getValue());
                 lightBulb.setBrightness((short) value);
+                lightBulbViewModel.setLightBulbState(lightBulb);
             }
         });
 
@@ -136,6 +141,7 @@ public class LightBulbFragment extends Fragment {
                 }
                 break;
         }
+        lightBulbViewModel.setLightBulbState(lightBulb);
     }
 
 }

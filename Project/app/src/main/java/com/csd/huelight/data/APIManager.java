@@ -90,9 +90,9 @@ public class APIManager extends Observable {
                                     names.get(i).toString(),
                                     lightBulbJson.getString("name"),
                                     lightBulbStateJson.getBoolean("on"),
-                                    (short) lightBulbStateJson.getInt("hue"),
-                                    (byte) lightBulbStateJson.getInt("sat"),
-                                    (byte) lightBulbStateJson.getInt("bri"),
+                                    lightBulbStateJson.getInt("hue"),
+                                    (short) lightBulbStateJson.getInt("sat"),
+                                    (short) lightBulbStateJson.getInt("bri"),
                                     (lightBulbStateJson.getString("effect").equals("colorloop"))));
                         }
 
@@ -117,8 +117,8 @@ public class APIManager extends Observable {
                 body.put("hue", lightBulb.getHue());
                 body.put("sat", lightBulb.getSaturation());
                 body.put("bri", lightBulb.getBrightness());
+                body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
             }
-            body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
 
             RequestBody requestBody = RequestBody.create(body.toString(),JSON);
             Request request = new Request.Builder()
