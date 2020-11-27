@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">HueLight</string>
+    <string name="temptext">TempText</string>
+    <string name="name">Name :</string>
+    <string name="on">On :</string>
+    <string name="power_on">Power on</string>
+    <string name="power_off">Power off</string>
+    <string name="rainbow">Rainbow</string>
+    <string name="none">None</string>
+    <string name="name_of_lamp">Name of lamp</string>
+    <string name="hue">Hue :</string>
+    <string name="saturation">Saturation :</string>
+    <string name="brightness">Brightness :</string>
+    <string name="uniqueid">UniqueID :</string>
+    <string name="colorloop">Colorloop :</string>
+    <string name="save_changes">Save changes</string>
 </resources>

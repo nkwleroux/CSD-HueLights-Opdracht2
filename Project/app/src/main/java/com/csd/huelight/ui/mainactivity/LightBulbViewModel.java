@@ -14,7 +14,6 @@ import java.util.List;
 public class LightBulbViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
-
     private MutableLiveData<List<LightBulb>> lightBulbs;
     private APIManager apiManager;
 

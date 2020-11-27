@@ -1,33 +1,26 @@
 package com.csd.huelight.ui.mainactivity;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
 import com.csd.huelight.R;
 import com.csd.huelight.data.LightBulb;
-import com.csd.huelight.ui.mainactivity.lightbulblist.LightBulbListFragment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 
-import java.util.List;
-
 public class LightBulbFragment extends Fragment {
-
-    private LightBulbViewModel lightBulbViewModel;
-
 
     public static LightBulbFragment newInstance() {
         return new LightBulbFragment();
@@ -39,46 +32,110 @@ public class LightBulbFragment extends Fragment {
         return inflater.inflate(R.layout.light_bulb_fragment, container, false);
     }
 
+    LightBulb lightBulb = null;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
+        LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
         // TODO: Use the ViewModel
 
-        LightBulb lightBulb = (LightBulb) getArguments().getSerializable("lightbulb");
+        int position = getArguments().getInt("lightbulb");
+        lightBulb = lightBulbViewModel.getLightBulbs().getValue().get(position);
 
         TextView UID = getActivity().findViewById(R.id.textViewUniqueID);
         UID.setText(lightBulb.getUID());
 
-        TextView name = getActivity().findViewById(R.id.editTextName);
+        EditText name = getActivity().findViewById(R.id.editTextName);
         name.setText(lightBulb.getName());
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
-        Chip powerChip = getActivity().findViewById(R.id.chipOn);
-        powerChip.setChecked(lightBulb.isOn());
+            //TODO need to send message with new name. Need to check on enter input.
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                lightBulb.setName(name.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        Chip chipPower = getActivity().findViewById(R.id.chipOn);
+        SetChipState("chipPower", chipPower, lightBulb.isOn());
+        chipPower.setOnCheckedChangeListener((compoundButton, isChecked) ->
+                SetChipState("chipPower", chipPower, isChecked));
 
         //TODO hue/brightness/saturation
         Slider sliderHue = getActivity().findViewById(R.id.sliderHue);
 //        sliderHue.setValue(lightBulb.getHue());
+        sliderHue.setValue(lightBulb.getHue());
+        sliderHue.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) {}
 
-        Slider sliderSaturation = getActivity().findViewById(R.id.sliderSaturation);
-
-        Slider sliderBrightness = getActivity().findViewById(R.id.sliderBrightness);
-
-        Chip colorLoopChip = getActivity().findViewById(R.id.chipColorloop);
-        colorLoopChip.setChecked(lightBulb.isColorLoop());
-
-        Button click = getActivity().findViewById(R.id.buttonSaveChanges);
-        click.setOnClickListener(view -> {
-            for (LightBulb l : lightBulbViewModel.getLightBulbs().getValue()) {
-                if(l == lightBulb){
-                    l.setName(name.getText().toString());
-                    l.setOn(powerChip.isChecked());
-                    l.setColorLoop(colorLoopChip.isChecked());
-                }
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                lightBulb.setHue((int) Math.abs(slider.getValue()));
             }
         });
 
+        Slider sliderSaturation = getActivity().findViewById(R.id.sliderSaturation);
+        sliderSaturation.setValue(lightBulb.getSaturation());
+        sliderSaturation.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) {}
+
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                int value = (int) Math.abs(slider.getValue());
+                lightBulb.setSaturation((short) value);
+            }
+        });
+
+        Slider sliderBrightness = getActivity().findViewById(R.id.sliderBrightness);
+        sliderBrightness.setValue(lightBulb.getBrightness());
+        sliderBrightness.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) {}
+
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                int value = (int) Math.abs(slider.getValue());
+                lightBulb.setBrightness((short) value);
+            }
+        });
+
+        Chip chipColorLoop = getActivity().findViewById(R.id.chipColorloop);
+        SetChipState("chipColorLoop", chipColorLoop, lightBulb.isColorLoop());
+        chipColorLoop.setOnCheckedChangeListener((compoundButton, isChecked) ->
+                SetChipState("chipColorLoop", chipColorLoop, isChecked));
+    }
+
+    private void SetChipState(String chipName, Chip chip, boolean state) {
+        chip.setChecked(state);
+        switch (chipName) {
+            case "chipPower":
+                lightBulb.setOn(state);
+                if (state) {
+                    chip.setText(getString(R.string.power_on));
+                } else {
+                    chip.setText(getString(R.string.power_off));
+                }
+                break;
+            case "chipColorLoop":
+                lightBulb.setColorLoop(state);
+                if (state) {
+                    chip.setText(getString(R.string.rainbow));
+                } else {
+                    chip.setText(getString(R.string.none));
+                }
+                break;
+        }
     }
 
 }
