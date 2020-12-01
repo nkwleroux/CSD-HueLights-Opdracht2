@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_lightBulbListFragment_to_lightBulbFragment"
             app:destination="@id/lightBulbFragment" />
+        <action
+            android:id="@+id/action_lightBulbListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -22,6 +25,17 @@
         tools:layout="@layout/light_bulb_fragment" >
         <action
             android:id="@+id/action_lightBulbFragment_to_lightBulbListFragment"
+            app:destination="@id/lightBulbListFragment" />
+        <action
+            android:id="@+id/action_lightBulbFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.csd.huelight.ui.mainactivity.settings.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_lightBulbListFragment"
             app:destination="@id/lightBulbListFragment" />
     </fragment>
 </navigation>

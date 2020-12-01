@@ -1,6 +1,7 @@
 package com.csd.huelight.ui.mainactivity.lightbulblist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
+import com.csd.huelight.ui.mainactivity.lightbulbdetail.LightBulbFragment;
 
 /**
  * A fragment representing a list of Items.
@@ -27,7 +29,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     private static final String LOGTAG = LightBulbListFragment.class.getName();
     private LightBulbViewModel lightBulbViewModel;
     private LightBulbRecyclerViewAdapter lightBulbRecyclerViewAdapter;
-    private NavController navController;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -75,14 +76,22 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(view);
         lightBulbViewModel.retrieveLightBulbs();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onClickPos(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("lightbulb",position);
-        navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
+        LightBulbFragment lightBulbFragment = new LightBulbFragment();
+        lightBulbFragment.setArguments(bundle);
+        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container, lightBulbFragment).commit();
+
+//        navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
     }
 }
