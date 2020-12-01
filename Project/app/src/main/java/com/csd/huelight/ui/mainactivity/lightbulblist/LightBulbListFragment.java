@@ -88,9 +88,9 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     public void onClickPos(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("lightbulb",position);
-        LightBulbFragment lightBulbFragment = new LightBulbFragment();
-        lightBulbFragment.setArguments(bundle);
-        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container, lightBulbFragment).commit();
+//        LightBulbFragment lightBulbFragment = new LightBulbFragment();
+//        lightBulbFragment.setArguments(bundle);
+//        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container, lightBulbFragment).commit();
 
 //        navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
     }
