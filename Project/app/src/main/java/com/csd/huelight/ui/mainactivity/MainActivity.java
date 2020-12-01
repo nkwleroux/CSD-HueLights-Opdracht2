@@ -12,6 +12,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.csd.huelight.R;
 import com.csd.huelight.ui.mainactivity.lightbulblist.LightBulbListFragment;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String LOGTAG = MainActivity.class.getName();
 
     private DrawerLayout drawer;
+    private NavController navController;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         this.drawer = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         toggle.syncState();
+
+        navigationView.setCheckedItem(R.id.nav_list);
 
         LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(this).get(LightBulbViewModel.class);
         lightBulbViewModel.init();
