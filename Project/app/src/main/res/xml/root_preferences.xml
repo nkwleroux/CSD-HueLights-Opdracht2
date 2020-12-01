@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Hue Bridge settings"
+        android:icon="@drawable/ic_baseline_settings_24">
+
+        <EditTextPreference
+            app:key="IP"
+            app:title="ip"
+            android:digits="0123456789."
+            android:summary="De port waarop de hue bridge is"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="10.0.0.2"/>
+
+        <EditTextPreference
+            app:key="PORT"
+            app:title="port"
+            android:digits="0123456789"
+            android:summary="De port waarop de hue bridge is"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="8000"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
