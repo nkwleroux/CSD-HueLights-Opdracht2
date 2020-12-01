@@ -10,11 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,6 +37,10 @@ public class APIManager extends Observable {
     private OkHttpClient client;
 
     private List<LightBulb> _lightBulbs;
+    private Exception exception;
+    private byte calls;
+
+    private final Object callsSynclock = new Object();
 
     //Same as 127.0.0.1 or LocalHost
     private String ip = "10.0.2.2";
@@ -52,13 +55,49 @@ public class APIManager extends Observable {
     }
 
     private APIManager() {
-        this.client = new OkHttpClient();
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .build();
         this._lightBulbs = new ArrayList<>();
     }
 
     public List<LightBulb> getLightBulbs() {
         return _lightBulbs;
     }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public byte getCalls() {
+        return calls;
+    }
+
+    private void setCalls(byte calls) {
+        this.calls = calls;
+        notifyObservers();
+    }
+
+    private void newCall() {
+        synchronized (callsSynclock) {
+            if (this.calls >= Byte.MAX_VALUE) {
+                //do something
+            } else {
+                setCalls((byte) (this.calls + 1));
+            }
+        }
+    }
+
+    private void endCall() {
+        synchronized (callsSynclock) {
+            if (calls <= 0) {
+                //something went wrong
+            } else {
+                setCalls((byte) (this.calls - 1));
+            }
+        }
+    }
+
 
     private String getHTTRequest() {
         return "http://" + ip + ":" + port + "/api/" + username;
@@ -72,8 +111,10 @@ public class APIManager extends Observable {
         this.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(LOGTAG, "http failure, get bulbs", e);
-                e.printStackTrace();
+//                Log.d(LOGTAG, "http failure, get bulbs", e);
+                exception = e;
+                endCall();
+                notifyObservers();
             }
 
             @Override
@@ -100,15 +141,19 @@ public class APIManager extends Observable {
                         }
 
                         _lightBulbs = lightBulbs;
-                        notifyObservers();
+                        exception = null;
                     } catch (JSONException e) {
                         Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
+                        exception = e;
                     }
-                }else {
+                } else {
                     //uuuuh
+                    exception = new Exception("http request not successful");
                 }
+                endCall();
             }
         });
+        newCall();
     }
 
     public void setLightBulbState(LightBulb lightBulb) {
@@ -132,20 +177,25 @@ public class APIManager extends Observable {
             this.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Log.d(LOGTAG, "http failure, set bulb state", e);
-                    e.printStackTrace();
+//                    Log.d(LOGTAG, "http failure, set bulb state", e);
+                    exception = e;
+                    endCall();
                 }
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Log.d(LOGTAG, "set state successful");
+                        exception = null;
                         retrieveLightBulbs();
-                    }else {
+                    } else {
                         //uuuuh
+                        exception = new Exception("http request not successful");
                     }
+                    endCall();
                 }
             });
+            newCall();
         } catch (Exception e) {
             e.printStackTrace();
         }

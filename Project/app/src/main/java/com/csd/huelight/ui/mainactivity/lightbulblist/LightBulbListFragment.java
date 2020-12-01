@@ -61,8 +61,6 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
 
             lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
 
-            lightBulbViewModel.init();
-
             lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) ->
                     lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs));
 
