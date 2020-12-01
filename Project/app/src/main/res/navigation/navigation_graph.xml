@@ -37,5 +37,8 @@
         <action
             android:id="@+id/action_settingsFragment_to_lightBulbListFragment"
             app:destination="@id/lightBulbListFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_lightBulbFragment"
+            app:destination="@id/lightBulbFragment" />
     </fragment>
 </navigation>
