@@ -26,7 +26,6 @@ import okhttp3.Response;
 public class APIManager extends Observable {
 
     //TODO Dummy data. Need to implement.
-    //Uses singleton pattern
 
     private static final String LOGTAG = APIManager.class.getName();
 
@@ -63,6 +62,10 @@ public class APIManager extends Observable {
 
     public List<LightBulb> getLightBulbs() {
         return _lightBulbs;
+    }
+
+    public void setLightBulbs(List<LightBulb> lightBulbs) {
+        _lightBulbs = lightBulbs;
     }
 
     public Exception getException() {
@@ -140,7 +143,7 @@ public class APIManager extends Observable {
                                     (lightBulbStateJson.getString("effect").equals("colorloop"))));
                         }
 
-                        _lightBulbs = lightBulbs;
+                        setLightBulbs(lightBulbs);
                         exception = null;
                     } catch (JSONException e) {
                         Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
@@ -168,7 +171,7 @@ public class APIManager extends Observable {
                 body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
             }
 
-            RequestBody requestBody = RequestBody.create(JSON, body.toString());
+            RequestBody requestBody = RequestBody.create(body.toString(),JSON);
             Request request = new Request.Builder()
                     .url(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state")
                     .put(requestBody)
@@ -201,21 +204,4 @@ public class APIManager extends Observable {
         }
     }
 
-    //Test method to add lamps to UI.
-    public List<LightBulb> getRandomLightBulbs(int amount) {
-        List<LightBulb> lightBulbs = new ArrayList<>();
-        Random random = new Random();
-        for (int count = 1; count <= amount; count++) {
-            lightBulbs.add(new LightBulb(
-                    "UID : " + Math.abs(random.nextInt()),
-                    "" + random.nextInt(),
-                    "LightBulb " + count,
-                    random.nextBoolean(),
-                    (int) Math.abs(random.nextInt(65535)),
-                    (short) Math.abs(random.nextInt(254)),
-                    (short) Math.abs(random.nextInt(254)),
-                    random.nextBoolean()));
-        }
-        return lightBulbs;
-    }
 }
