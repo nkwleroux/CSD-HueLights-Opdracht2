@@ -23,6 +23,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//Can also use @singleton instead of getinstance();
 public class APIManager extends Observable {
 
     //TODO Dummy data. Need to implement.

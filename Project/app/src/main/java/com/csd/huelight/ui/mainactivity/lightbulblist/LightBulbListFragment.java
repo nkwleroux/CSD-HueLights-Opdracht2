@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.csd.huelight.R;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 import com.csd.huelight.ui.mainactivity.lightbulbdetail.LightBulbFragment;
+import com.google.android.material.navigation.NavigationView;
 
 /**
  * A fragment representing a list of Items.
@@ -88,10 +89,11 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     public void onClickPos(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("lightbulb",position);
-        LightBulbFragment lightBulbFragment = new LightBulbFragment();
-        lightBulbFragment.setArguments(bundle);
-        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container, lightBulbFragment).commit();
+        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+        if(navigationView.getCheckedItem() != null) {
+            navigationView.getCheckedItem().setChecked(false);
+        }
+        Navigation.findNavController(getActivity(),R.id.nav_host_fragment_container).navigate(R.id.lightBulbFragment,bundle);
 
-//        navController.navigate(R.id.action_lightBulbListFragment_to_lightBulbFragment, bundle);
     }
 }
