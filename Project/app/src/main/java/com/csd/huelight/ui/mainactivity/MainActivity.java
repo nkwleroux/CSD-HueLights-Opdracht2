@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,6 +59,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            Log.d("temp", "exeption observer called " + exceptionMessage);
             if (exceptionMessage != null && !exceptionMessage.equals("")) {
                 Toast.makeText(this, exceptionMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        lightBulbViewModel.getCalls().observe(this, (calls) ->{
+            ProgressBar progressBar = findViewById(R.id.progress_bar);
+            if (calls == 0){
+                progressBar.setVisibility(View.INVISIBLE);
+            }else {
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 
