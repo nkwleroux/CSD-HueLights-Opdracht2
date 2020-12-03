@@ -47,6 +47,30 @@ public class APIManager extends Observable {
     private int port = 8000;
     private String username = "newdeveloper";
 
+    //Fix settings preferences so you can change the ip and port
+/*    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void newConnection(){
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .build();
+        this._lightBulbs = new ArrayList<>();
+    }*/
+
     public static APIManager getInstance() {
         if (apiManagerInstance == null) {
             apiManagerInstance = new APIManager();
