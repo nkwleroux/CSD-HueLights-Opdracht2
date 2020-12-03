@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.csd.huelight.R;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
@@ -23,11 +24,13 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * A fragment representing a list of Items.
  */
-public class LightBulbListFragment extends Fragment implements LightBulbClickListener {
+public class LightBulbListFragment extends Fragment implements LightBulbClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String LOGTAG = LightBulbListFragment.class.getName();
     private LightBulbViewModel lightBulbViewModel;
     private LightBulbRecyclerViewAdapter lightBulbRecyclerViewAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,34 +50,48 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
         View view = inflater.inflate(R.layout.lightbulb_list_fragment, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
-            Configuration configuration = getResources().getConfiguration();
-            int screenWidthDp = configuration.screenWidthDp;
+        Configuration configuration = getResources().getConfiguration();
+        int screenWidthDp = configuration.screenWidthDp;
 //            screenWidthDp -= 16;//padding
 
-            int columns = screenWidthDp / (200);//144 is min width
+        int columns = screenWidthDp / (200);//200 is min width
 
-            recyclerView.setLayoutManager(new GridLayoutManager(context, columns));
+        recyclerView.setLayoutManager(new GridLayoutManager(context, columns));
+        recyclerView.setHasFixedSize(true);
 
-            lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view;
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.design_default_color_primary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
 
-            lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) ->
-                    lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs));
+        lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
 
-            lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this, lightBulbViewModel);
+        lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) -> {
+            lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs);
+            mSwipeRefreshLayout.setRefreshing(false);
+        });
 
-            //TODO een plek maken waar de lampen worden opgeslagen
-            recyclerView.setAdapter(lightBulbRecyclerViewAdapter);
-        }
+        lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this, lightBulbViewModel);
+
+        //TODO een plek maken waar de lampen worden opgeslagen
+        recyclerView.setAdapter(lightBulbRecyclerViewAdapter);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         lightBulbViewModel.retrieveLightBulbs();
     }
 
@@ -93,5 +110,11 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
         }
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment_container).navigate(R.id.lightBulbFragment, bundle);
 
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        lightBulbViewModel.retrieveLightBulbs();
     }
 }
