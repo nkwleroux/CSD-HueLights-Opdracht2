@@ -6,7 +6,8 @@
 
         <EditTextPreference
             app:key="IP"
-            app:title="ip"
+            app:title="IP address"
+            app:dialogTitle="IP address"
             android:digits="0123456789."
             android:summary="De port waarop de hue bridge is"
             app:useSimpleSummaryProvider="true"
@@ -14,7 +15,8 @@
 
         <EditTextPreference
             app:key="PORT"
-            app:title="port"
+            app:title="Port number"
+            app:dialogTitle="Port number"
             android:digits="0123456789"
             android:summary="De port waarop de hue bridge is"
             app:useSimpleSummaryProvider="true"
