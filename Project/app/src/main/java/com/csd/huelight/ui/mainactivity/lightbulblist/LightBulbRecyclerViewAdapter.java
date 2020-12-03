@@ -1,5 +1,7 @@
 package com.csd.huelight.ui.mainactivity.lightbulblist;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.csd.huelight.R;
 import com.csd.huelight.data.LightBulb;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -85,7 +88,22 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
                 .load(R.drawable.lightbulb)
                 .placeholder(R.drawable.ic_baseline_sync_24)
                 .error(R.drawable.ic_baseline_error_outline_24)
-                .into(holder.mIconView);
+                .into(holder.mIconView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.mIconView.setColorFilter(Color.HSVToColor(
+                                new float[]{
+                                        holder.mItem.getHue() / (float) Short.MAX_VALUE * 180f,
+                                        holder.mItem.getSaturation() / 256f,
+                                        holder.mItem.getBrightness() / 256f}),
+                                PorterDuff.Mode.MULTIPLY);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
     }
 
     @Override
