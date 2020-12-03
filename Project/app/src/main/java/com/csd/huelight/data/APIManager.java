@@ -192,14 +192,17 @@ public class APIManager extends Observable {
         for (LightBulb lightBulb : lightBulbs){
             JSONObject body = new JSONObject();
             try {
-                body.put("on", lightBulb.isOn());
-
-                body.put("bri_inc", 254);
-                body.put("sat_inc", 254);
-                body.put("hue_inc", 254);
-                body.put("ct_inc", 254);
-                body.put("xy_inc", 254);
-                sendRequestAndRetrieveLightBulbs(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString());
+//                body.put("hue", 0);
+//                body.put("sat", 0);
+//                body.put("bri", 0);
+                body.put("effect", "colorloop");
+                body.put("transitiontime", 1);
+                body.put("bri_inc", 100);
+                body.put("sat_inc", 100);
+                body.put("hue_inc", 100);
+                body.put("ct_inc", 100);
+                body.put("xy_inc", 100);
+                sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString(), false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -217,13 +220,13 @@ public class APIManager extends Observable {
                 body.put("bri", lightBulb.getBrightness());
                 body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
             }
-            sendRequestAndRetrieveLightBulbs(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString());
+            sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString(), true);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendRequestAndRetrieveLightBulbs(String url, String json) {
+    private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
@@ -243,7 +246,9 @@ public class APIManager extends Observable {
                 if (response.isSuccessful()) {
                     Log.d(LOGTAG, "set state successful");
                     exception = null;
-                    retrieveLightBulbs();
+                    if (retrieveAfter) {
+                        retrieveLightBulbs();
+                    }
                 } else {
                     //uuuuh
                     exception = new Exception("http request not successful");

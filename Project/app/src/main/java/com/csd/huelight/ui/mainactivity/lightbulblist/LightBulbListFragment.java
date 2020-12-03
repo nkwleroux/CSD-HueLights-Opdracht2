@@ -12,14 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.csd.huelight.R;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
-import com.csd.huelight.ui.mainactivity.lightbulbdetail.LightBulbFragment;
 import com.google.android.material.navigation.NavigationView;
 
 /**
@@ -88,12 +86,12 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
     @Override
     public void onClickPos(int position) {
         Bundle bundle = new Bundle();
-        bundle.putInt("lightbulb",position);
+        bundle.putInt("lightbulb", position);
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
-        if(navigationView.getCheckedItem() != null) {
+        if (navigationView.getCheckedItem() != null) {
             navigationView.getCheckedItem().setChecked(false);
         }
-        Navigation.findNavController(getActivity(),R.id.nav_host_fragment_container).navigate(R.id.lightBulbFragment,bundle);
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment_container).navigate(R.id.lightBulbFragment, bundle);
 
     }
 }
