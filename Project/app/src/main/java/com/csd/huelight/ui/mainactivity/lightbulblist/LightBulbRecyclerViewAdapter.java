@@ -91,11 +91,11 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
                 .into(holder.mIconView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.mIconView.setColorFilter(Color.HSVToColor(
+                        holder.mIconView.setColorFilter(holder.mItem.isOn() ? Color.HSVToColor(
                                 new float[]{
                                         holder.mItem.getHue() / (float) Short.MAX_VALUE * 180f,
                                         holder.mItem.getSaturation() / 256f,
-                                        holder.mItem.getBrightness() / 256f}),
+                                        holder.mItem.getBrightness() / 256f}) : Color.WHITE,
                                 PorterDuff.Mode.MULTIPLY);
                     }
 
