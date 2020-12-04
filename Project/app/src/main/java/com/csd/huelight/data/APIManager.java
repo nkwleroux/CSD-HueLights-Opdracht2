@@ -264,7 +264,7 @@ public class APIManager extends Observable {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    Log.d(LOGTAG, "set state successful");
+                    Log.d(LOGTAG, "request successful");
                     exception = null;
                     if (retrieveAfter) {
                         retrieveLightBulbs();

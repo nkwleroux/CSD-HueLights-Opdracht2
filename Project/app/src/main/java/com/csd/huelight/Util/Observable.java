@@ -6,12 +6,12 @@ import java.util.List;
 public abstract class Observable {
     private List<Observer> observers = new ArrayList<>();
 
-    public void addObserver(Observer observer) {
-        this.observers.add(observer);
+    public boolean addObserver(Observer observer) {
+        return this.observers.add(observer);
     }
 
-    public void RemoveObserver(Observer observer) {
-        this.observers.remove(observer);
+    public boolean removeObserver(Observer observer) {
+        return this.observers.remove(observer);
     }
 
     protected void notifyObservers() {
