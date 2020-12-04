@@ -73,8 +73,10 @@ public class LightBulbListFragment extends Fragment implements LightBulbClickLis
 
         lightBulbViewModel.getLightBulbs().observe(getViewLifecycleOwner(), (lightBulbs) -> {
             lightBulbRecyclerViewAdapter.updateLightBulbs(lightBulbs);
-            mSwipeRefreshLayout.setRefreshing(false);
         });
+
+        lightBulbViewModel.getCalls().observe(getViewLifecycleOwner(), (calls) ->
+                mSwipeRefreshLayout.setRefreshing(calls > 0));
 
         lightBulbRecyclerViewAdapter = new LightBulbRecyclerViewAdapter(lightBulbViewModel.getLightBulbs().getValue(), this, lightBulbViewModel);
 

@@ -51,7 +51,8 @@ public class LightBulbViewModel extends ViewModel implements Observer {
     public void update(Observable source) {
         if (source instanceof APIManager) {
             APIManager apiManager = (APIManager) source;
-            if (apiManager.getException().getMessage() != this.exceptionMessage.getValue()) {
+
+            if (apiManager.getException() != null && apiManager.getException().getMessage() != this.exceptionMessage.getValue()) {
 //                    Log.e(LOGTAG, "observed exception", apiManager.getException());
                 this.exceptionMessage.postValue(apiManager.getException().getMessage());
             }
