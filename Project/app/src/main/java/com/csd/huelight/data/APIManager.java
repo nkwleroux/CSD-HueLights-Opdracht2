@@ -235,7 +235,18 @@ public class APIManager extends Observable {
         }
     }
 
-    private void sendRequest(String url, String json, boolean retrieveAfter) {
+    public void setLightBulbName(LightBulb lightBulb) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("name", lightBulb.getName());
+            sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId(), body.toString(), true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+        private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)

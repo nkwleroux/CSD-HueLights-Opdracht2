@@ -1,8 +1,7 @@
 package com.csd.huelight.ui.mainactivity.lightbulbdetail;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 
 public class LightBulbFragment extends Fragment {
+
+    private static final String LOGTAG = LightBulbFragment.class.getName();
 
     private LightBulbViewModel lightBulbViewModel;
     private LightBulb lightBulb;
@@ -49,23 +50,21 @@ public class LightBulbFragment extends Fragment {
 
         EditText name = getActivity().findViewById(R.id.editTextName);
         name.setText(lightBulb.getName());
-        name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            //TODO need to send message with new name. Need to check on enter input.
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        name.setOnFocusChangeListener((v, hasFocus) -> {
+//            Log.d(LOGTAG, "focuschanged " + hasFocus);
+            if (!hasFocus) {
                 lightBulb.setName(name.getText().toString());
+                lightBulbViewModel.setLightBulbName(lightBulb);
             }
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
         });
 
+
         Chip chipPower = getActivity().findViewById(R.id.chipOn);
+
         SetChipState("chipPower", chipPower, lightBulb.isOn());
-        chipPower.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        chipPower.setOnCheckedChangeListener((compoundButton, isChecked) ->
+
+        {
             SetChipState("chipPower", chipPower, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
         });
@@ -74,7 +73,8 @@ public class LightBulbFragment extends Fragment {
         sliderHue.setValue(lightBulb.getHue());
         sliderHue.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull Slider slider) {}
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+            }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
@@ -87,7 +87,8 @@ public class LightBulbFragment extends Fragment {
         sliderSaturation.setValue(lightBulb.getSaturation());
         sliderSaturation.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull Slider slider) {}
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+            }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
@@ -101,7 +102,8 @@ public class LightBulbFragment extends Fragment {
         sliderBrightness.setValue(lightBulb.getBrightness());
         sliderBrightness.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull Slider slider) {}
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+            }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
@@ -112,9 +114,12 @@ public class LightBulbFragment extends Fragment {
         });
 
         Chip chipColorLoop = getActivity().findViewById(R.id.chipColorloop);
+
         SetChipState("chipColorLoop", chipColorLoop, lightBulb.isColorLoop());
-        chipColorLoop.setOnCheckedChangeListener((compoundButton, isChecked) ->{
-                SetChipState("chipColorLoop", chipColorLoop, isChecked);
+        chipColorLoop.setOnCheckedChangeListener((compoundButton, isChecked) ->
+
+        {
+            SetChipState("chipColorLoop", chipColorLoop, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
         });
     }
