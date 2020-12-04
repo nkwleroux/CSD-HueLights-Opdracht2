@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.csd.huelight.R;
+import com.csd.huelight.data.APIManager;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Viewmodel
         LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(this).get(LightBulbViewModel.class);
-        lightBulbViewModel.init();
+        lightBulbViewModel.init(APIManager.getInstance());
 
         final ProgressBar progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lightBulbViewModel.getExceptionMessage().observe(this, (exceptionMessage) -> {
 //            Log.d("temp", "exeption observer called " + exceptionMessage);
             if (exceptionMessage != null && !exceptionMessage.equals("")) {
-                Toast.makeText(this, exceptionMessage, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error: " + exceptionMessage, Toast.LENGTH_LONG).show();
             }
         });
     }

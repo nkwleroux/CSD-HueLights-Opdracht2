@@ -24,7 +24,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //Can also use @singleton instead of getinstance();
-public class APIManager extends Observable {
+public class APIManager extends ObservableLightBulbApiManager {
 
     //TODO Dummy data. Need to implement.
 
@@ -197,7 +197,7 @@ public class APIManager extends Observable {
         newCall();
     }
 
-    private void setDisco(List<LightBulb> lightBulbs) {
+    public void setDisco(List<LightBulb> lightBulbs) {
         for (LightBulb lightBulb : lightBulbs) {
             JSONObject body = new JSONObject();
             try {
