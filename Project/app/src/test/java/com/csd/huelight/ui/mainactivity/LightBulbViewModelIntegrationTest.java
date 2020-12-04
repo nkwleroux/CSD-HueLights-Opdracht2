@@ -31,7 +31,9 @@ public class LightBulbViewModelIntegrationTest {
         mockWebServer.shutdown();
     }
 
-//    @Test
+    // test failed omdat het niet in een android omgeving zit
+    //TODO InstantTaskExecutorRule
+    @Test
     void retrieveLightBulbsTest() throws InterruptedException {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
