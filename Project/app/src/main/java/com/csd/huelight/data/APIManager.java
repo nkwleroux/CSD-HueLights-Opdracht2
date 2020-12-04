@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,7 @@ public class APIManager extends Observable {
         synchronized (callsSynclock) {
             if (calls <= 0) {
                 //something went wrong
+//                Log.e(LOGTAG, "negative amount of calls is impossible", new IllegalArgumentException(calls + ""));
             } else {
                 setCalls((byte) (this.calls - 1));
             }
@@ -140,47 +142,54 @@ public class APIManager extends Observable {
         this.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Log.d(LOGTAG, "http failure, get bulbs", e);
+                Log.d(LOGTAG, "http failure, get bulbs", e);
                 exception = e;
                 endCall();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String jsonString = response.body().string();
-                    Log.d(LOGTAG, jsonString);
-                    try {
-                        JSONObject root = new JSONObject(jsonString);
-                        JSONArray names = root.names();
-                        List<LightBulb> lightBulbs = new ArrayList<>();
-                        for (int i = 0; i < names.length(); i++) {
-                            JSONObject lightBulbJson = root.getJSONObject(names.getString(i));
-                            JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
-                            lightBulbs.add(new LightBulb(
-                                    lightBulbJson.getString("uniqueid"),
-                                    names.get(i).toString(),
-                                    lightBulbJson.getString("name"),
-                                    lightBulbStateJson.getBoolean("on"),
-                                    lightBulbStateJson.getInt("hue"),
-                                    (short) lightBulbStateJson.getInt("sat"),
-                                    (short) lightBulbStateJson.getInt("bri"),
-                                    (lightBulbStateJson.getString("effect").equals("colorloop"))));
-                        }
+                Log.d(LOGTAG, "got http");
+                try {
+                    if (response.isSuccessful()) {
+                        String jsonString = response.body().string();
+                        Log.d(LOGTAG, jsonString);
+                        try {
+                            JSONObject root = new JSONObject(jsonString);
+                            JSONArray names = root.names();
+                            List<LightBulb> lightBulbs = new ArrayList<>();
+                            for (int i = 0; i < names.length(); i++) {
+                                JSONObject lightBulbJson = root.getJSONObject(names.getString(i));
+                                JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
+                                lightBulbs.add(new LightBulb(
+                                        lightBulbJson.getString("uniqueid"),
+                                        names.get(i).toString(),
+                                        lightBulbJson.getString("name"),
+                                        lightBulbStateJson.getBoolean("on"),
+                                        lightBulbStateJson.getInt("hue"),
+                                        (short) lightBulbStateJson.getInt("sat"),
+                                        (short) lightBulbStateJson.getInt("bri"),
+                                        (lightBulbStateJson.getString("effect").equals("colorloop"))));
+                            }
 
-                        setLightBulbs(lightBulbs);
-                        if(!discoSet){
-                            setDisco(lightBulbs);
-                            discoSet = true;
+                            setLightBulbs(lightBulbs);
+                            if (!discoSet) {
+                                setDisco(lightBulbs);
+                                discoSet = true;
+                            }
+                            exception = null;
+                        } catch (JSONException e) {
+                            Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
+                            exception = e;
                         }
-                        exception = null;
-                    } catch (JSONException e) {
-                        Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
-                        exception = e;
+                    } else {
+                        //uuuuh
+                        exception = new Exception("http request not successful");
                     }
-                } else {
-                    //uuuuh
-                    exception = new Exception("http request not successful");
+                } catch (EOFException e) {
+                    //internal okhttp3 error
+                    Log.e(LOGTAG, "internal error", e);
+                    exception = e;
                 }
                 endCall();
             }
@@ -188,18 +197,21 @@ public class APIManager extends Observable {
         newCall();
     }
 
-    private void setDisco(List<LightBulb> lightBulbs){
-        for (LightBulb lightBulb : lightBulbs){
+    private void setDisco(List<LightBulb> lightBulbs) {
+        for (LightBulb lightBulb : lightBulbs) {
             JSONObject body = new JSONObject();
             try {
-                body.put("on", lightBulb.isOn());
-
-                body.put("bri_inc", 254);
-                body.put("sat_inc", 254);
-                body.put("hue_inc", 254);
-                body.put("ct_inc", 254);
-                body.put("xy_inc", 254);
-                sendRequestAndRetrieveLightBulbs(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString());
+//                body.put("hue", 0);
+//                body.put("sat", 0);
+//                body.put("bri", 0);
+                body.put("effect", "colorloop");
+                body.put("transitiontime", 1);
+                body.put("bri_inc", 100);
+                body.put("sat_inc", 100);
+                body.put("hue_inc", 100);
+                body.put("ct_inc", 100);
+                body.put("xy_inc", 100);
+                sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString(), false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -217,13 +229,13 @@ public class APIManager extends Observable {
                 body.put("bri", lightBulb.getBrightness());
                 body.put("effect", lightBulb.isColorLoop() ? "colorloop" : "none");
             }
-            sendRequestAndRetrieveLightBulbs(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString());
+            sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString(), true);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendRequestAndRetrieveLightBulbs(String url, String json) {
+    private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
@@ -243,7 +255,9 @@ public class APIManager extends Observable {
                 if (response.isSuccessful()) {
                     Log.d(LOGTAG, "set state successful");
                     exception = null;
-                    retrieveLightBulbs();
+                    if (retrieveAfter) {
+                        retrieveLightBulbs();
+                    }
                 } else {
                     //uuuuh
                     exception = new Exception("http request not successful");

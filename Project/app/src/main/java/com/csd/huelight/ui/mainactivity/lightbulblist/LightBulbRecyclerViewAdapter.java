@@ -2,7 +2,6 @@ package com.csd.huelight.ui.mainactivity.lightbulblist;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,7 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 //        if (updated){
 //            notifyDataSetChanged();
 //        }
-        Log.i(LOGTAG, "updating lightBulbs " + lightBulbs.size());
+//        Log.i(LOGTAG, "updating lightBulbs " + lightBulbs.size());
 
         mValues.clear();
         mValues.addAll(lightBulbs);

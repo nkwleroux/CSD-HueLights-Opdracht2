@@ -3,8 +3,6 @@ package com.csd.huelight.ui.mainactivity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -55,33 +53,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(this).get(LightBulbViewModel.class);
         lightBulbViewModel.init();
 
+        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
+        lightBulbViewModel.getCalls().observe(this, (calls) -> {
+            Log.d(LOGTAG, "calles set to " + calls);
+            if (calls < 0) {
+                Log.e(LOGTAG, "negative amount of calls is impossible", new IllegalArgumentException(calls + ""));
+            }
+            if (calls == 0) {
+                progressBar.setVisibility(View.INVISIBLE);
+            } else {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+
         lightBulbViewModel.getExceptionMessage().observe(this, (exceptionMessage) -> {
 //            Log.d("temp", "exeption observer called " + exceptionMessage);
             if (exceptionMessage != null && !exceptionMessage.equals("")) {
                 Toast.makeText(this, exceptionMessage, Toast.LENGTH_LONG).show();
             }
         });
-
-        lightBulbViewModel.getCalls().observe(this, (calls) ->{
-            ProgressBar progressBar = findViewById(R.id.progress_bar);
-            if (calls == 0){
-                progressBar.setVisibility(View.INVISIBLE);
-            }else {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        });
-
     }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{
-                if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
-                }else {
+                } else {
                     return false;
                 }
             }
@@ -105,16 +107,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         init();
     }
 
-    private void init(){
-        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment_container);
-        NavigationUI.setupActionBarWithNavController(this,navController, drawerLayout);
+    private void init() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.d(LOGTAG, "onNavigationItemSelected called " + item.getItemId());
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_list:
 
                 // nav options to clear backstack
@@ -122,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setPopUpTo(R.id.navigation_graph, true)
                         .build();
 
-                Navigation.findNavController(this,R.id.nav_host_fragment_container).navigate(R.id.lightBulbListFragment,null,navOptions);
+                Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.lightBulbListFragment, null, navOptions);
                 break;
             case R.id.nav_settings:
-                if(isValidDestination(R.id.settingsFragment)) {
+                if (isValidDestination(R.id.settingsFragment)) {
                     Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.settingsFragment);
                 }
                 break;
@@ -137,18 +139,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public boolean isValidDestination(int destination){
+    public boolean isValidDestination(int destination) {
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment_container).getCurrentDestination().getId();
     }
 
     //TODO Clear backstack from. When in huelight then click on settings. Screen has to change to list not huelight.
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else {
-            if(Navigation.findNavController(this, R.id.nav_host_fragment_container).getCurrentDestination().getId() == R.id.settingsFragment){
-                if(navigationView.getCheckedItem() != null) {
+        } else {
+            if (Navigation.findNavController(this, R.id.nav_host_fragment_container).getCurrentDestination().getId() == R.id.settingsFragment) {
+                if (navigationView.getCheckedItem() != null) {
                     navigationView.getCheckedItem().setChecked(false);
                 }
             }
