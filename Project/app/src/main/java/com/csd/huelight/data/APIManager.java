@@ -142,13 +142,14 @@ public class APIManager extends Observable {
         this.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Log.d(LOGTAG, "http failure, get bulbs", e);
+                Log.d(LOGTAG, "http failure, get bulbs", e);
                 exception = e;
                 endCall();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Log.d(LOGTAG, "got http");
                 try {
                     if (response.isSuccessful()) {
                         String jsonString = response.body().string();
@@ -185,8 +186,9 @@ public class APIManager extends Observable {
                         //uuuuh
                         exception = new Exception("http request not successful");
                     }
-                }catch (EOFException e){
+                } catch (EOFException e) {
                     //internal okhttp3 error
+                    Log.e(LOGTAG, "internal error", e);
                     exception = e;
                 }
                 endCall();

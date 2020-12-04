@@ -22,6 +22,14 @@
             app:useSimpleSummaryProvider="true"
             android:defaultValue="8000"/>
 
+        <EditTextPreference
+            app:key="DEV_NAME"
+            app:title="Developer name"
+            app:dialogTitle="Developer name"
+            android:summary="De developer naam voor de hue bridge"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="newdeveloper"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
