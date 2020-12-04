@@ -47,7 +47,7 @@ public class APIManager extends ObservableLightBulbApiManager {
     private String username = "newdeveloper";
 
     //Fix settings preferences so you can change the ip and port
-/*    public String getIp() {
+    public String getIp() {
         return ip;
     }
 
@@ -63,12 +63,20 @@ public class APIManager extends ObservableLightBulbApiManager {
         this.port = port;
     }
 
-    public void newConnection(){
-        this.client = new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .build();
-        this._lightBulbs = new ArrayList<>();
-    }*/
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+//    public void newConnection() {
+//        this.client = new OkHttpClient.Builder()
+//                .connectTimeout(5, TimeUnit.SECONDS)
+//                .build();
+//        this._lightBulbs = new ArrayList<>();
+//    }
 
     public static APIManager getInstance() {
         if (apiManagerInstance == null) {
@@ -97,15 +105,18 @@ public class APIManager extends ObservableLightBulbApiManager {
         return exception;
     }
 
+    //todo
     public byte getCalls() {
         return calls;
     }
 
+    //todo
     private void setCalls(byte calls) {
         this.calls = calls;
         notifyObservers();
     }
 
+    //todo
     private void newCall() {
         synchronized (callsSynclock) {
             if (this.calls >= Byte.MAX_VALUE) {
@@ -116,6 +127,7 @@ public class APIManager extends ObservableLightBulbApiManager {
         }
     }
 
+    //todo
     private void endCall() {
         synchronized (callsSynclock) {
             if (calls <= 0) {
@@ -128,7 +140,7 @@ public class APIManager extends ObservableLightBulbApiManager {
     }
 
 
-    private String getHTTRequest() {
+    public String getHTTRequest() {
         return "http://" + ip + ":" + port + "/api/" + username;
     }
 
@@ -140,18 +152,18 @@ public class APIManager extends ObservableLightBulbApiManager {
         this.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(LOGTAG, "http failure, get bulbs", e);
+//                Log.d(LOGTAG, "http failure, get bulbs", e);
                 exception = e;
                 endCall();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d(LOGTAG, "got http");
+//                Log.d(LOGTAG, "got http");
                 try {
                     if (response.isSuccessful()) {
                         String jsonString = response.body().string();
-                        Log.d(LOGTAG, jsonString);
+//                        Log.d(LOGTAG, jsonString);
                         try {
                             JSONObject root = new JSONObject(jsonString);
                             JSONArray names = root.names();
@@ -191,7 +203,7 @@ public class APIManager extends ObservableLightBulbApiManager {
         newCall();
     }
 
-    public void setDisco(List<LightBulb> lightBulbs) {
+/*    private void setDisco(List<LightBulb> lightBulbs) {
         for (LightBulb lightBulb : lightBulbs) {
             JSONObject body = new JSONObject();
             try {
@@ -210,7 +222,7 @@ public class APIManager extends ObservableLightBulbApiManager {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     public void setLightBulbState(LightBulb lightBulb) {
         JSONObject body = new JSONObject();
