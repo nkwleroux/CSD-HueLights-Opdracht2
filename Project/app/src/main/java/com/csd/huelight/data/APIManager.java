@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,40 +149,45 @@ public class APIManager extends Observable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String jsonString = response.body().string();
-                    Log.d(LOGTAG, jsonString);
-                    try {
-                        JSONObject root = new JSONObject(jsonString);
-                        JSONArray names = root.names();
-                        List<LightBulb> lightBulbs = new ArrayList<>();
-                        for (int i = 0; i < names.length(); i++) {
-                            JSONObject lightBulbJson = root.getJSONObject(names.getString(i));
-                            JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
-                            lightBulbs.add(new LightBulb(
-                                    lightBulbJson.getString("uniqueid"),
-                                    names.get(i).toString(),
-                                    lightBulbJson.getString("name"),
-                                    lightBulbStateJson.getBoolean("on"),
-                                    lightBulbStateJson.getInt("hue"),
-                                    (short) lightBulbStateJson.getInt("sat"),
-                                    (short) lightBulbStateJson.getInt("bri"),
-                                    (lightBulbStateJson.getString("effect").equals("colorloop"))));
-                        }
+                try {
+                    if (response.isSuccessful()) {
+                        String jsonString = response.body().string();
+                        Log.d(LOGTAG, jsonString);
+                        try {
+                            JSONObject root = new JSONObject(jsonString);
+                            JSONArray names = root.names();
+                            List<LightBulb> lightBulbs = new ArrayList<>();
+                            for (int i = 0; i < names.length(); i++) {
+                                JSONObject lightBulbJson = root.getJSONObject(names.getString(i));
+                                JSONObject lightBulbStateJson = lightBulbJson.getJSONObject("state");
+                                lightBulbs.add(new LightBulb(
+                                        lightBulbJson.getString("uniqueid"),
+                                        names.get(i).toString(),
+                                        lightBulbJson.getString("name"),
+                                        lightBulbStateJson.getBoolean("on"),
+                                        lightBulbStateJson.getInt("hue"),
+                                        (short) lightBulbStateJson.getInt("sat"),
+                                        (short) lightBulbStateJson.getInt("bri"),
+                                        (lightBulbStateJson.getString("effect").equals("colorloop"))));
+                            }
 
-                        setLightBulbs(lightBulbs);
-                        if (!discoSet) {
-                            setDisco(lightBulbs);
-                            discoSet = true;
+                            setLightBulbs(lightBulbs);
+                            if (!discoSet) {
+                                setDisco(lightBulbs);
+                                discoSet = true;
+                            }
+                            exception = null;
+                        } catch (JSONException e) {
+                            Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
+                            exception = e;
                         }
-                        exception = null;
-                    } catch (JSONException e) {
-                        Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
-                        exception = e;
+                    } else {
+                        //uuuuh
+                        exception = new Exception("http request not successful");
                     }
-                } else {
-                    //uuuuh
-                    exception = new Exception("http request not successful");
+                }catch (EOFException e){
+                    //internal okhttp3 error
+                    exception = e;
                 }
                 endCall();
             }
