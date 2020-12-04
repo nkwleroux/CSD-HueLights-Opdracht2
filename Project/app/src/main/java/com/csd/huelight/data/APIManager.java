@@ -71,13 +71,6 @@ public class APIManager extends ObservableLightBulbApiManager {
         this.username = username;
     }
 
-//    public void newConnection() {
-//        this.client = new OkHttpClient.Builder()
-//                .connectTimeout(5, TimeUnit.SECONDS)
-//                .build();
-//        this._lightBulbs = new ArrayList<>();
-//    }
-
     public static APIManager getInstance() {
         if (apiManagerInstance == null) {
             apiManagerInstance = new APIManager();
@@ -203,27 +196,6 @@ public class APIManager extends ObservableLightBulbApiManager {
         newCall();
     }
 
-/*    private void setDisco(List<LightBulb> lightBulbs) {
-        for (LightBulb lightBulb : lightBulbs) {
-            JSONObject body = new JSONObject();
-            try {
-//                body.put("hue", 0);
-//                body.put("sat", 0);
-//                body.put("bri", 0);
-                body.put("effect", "colorloop");
-                body.put("transitiontime", 1);
-                body.put("bri_inc", 100);
-                body.put("sat_inc", 100);
-                body.put("hue_inc", 100);
-                body.put("ct_inc", 100);
-                body.put("xy_inc", 100);
-                sendRequest(getHTTRequest() + "/lights/" + lightBulb.getId() + "/state", body.toString(), false);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
     public void setLightBulbState(LightBulb lightBulb) {
         JSONObject body = new JSONObject();
         try {
@@ -250,7 +222,6 @@ public class APIManager extends ObservableLightBulbApiManager {
             e.printStackTrace();
         }
     }
-
 
     private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
