@@ -2,8 +2,6 @@ package com.csd.huelight.data;
 
 import android.util.Log;
 
-import com.csd.huelight.Util.Observable;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -173,10 +171,6 @@ public class APIManager extends ObservableLightBulbApiManager {
                             }
 
                             setLightBulbs(lightBulbs);
-                            if (!discoSet) {
-                                setDisco(lightBulbs);
-                                discoSet = true;
-                            }
                             exception = null;
                         } catch (JSONException e) {
                             Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
@@ -246,7 +240,7 @@ public class APIManager extends ObservableLightBulbApiManager {
     }
 
 
-        private void sendRequest(String url, String json, boolean retrieveAfter) {
+    private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)

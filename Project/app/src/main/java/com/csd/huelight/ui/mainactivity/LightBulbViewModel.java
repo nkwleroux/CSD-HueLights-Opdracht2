@@ -8,7 +8,6 @@ import com.csd.huelight.Util.Observable;
 import com.csd.huelight.Util.Observer;
 import com.csd.huelight.data.APIManager;
 import com.csd.huelight.data.LightBulb;
-import com.csd.huelight.data.LightBulbAPIManager;
 import com.csd.huelight.data.ObservableLightBulbApiManager;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class LightBulbViewModel extends ViewModel implements Observer {
         if (lightBulbs != null) {
             return;
         }
-        this.apiManager = apiManager
+        this.apiManager = apiManager;
         this.apiManager.addObserver(this);
         this.lightBulbs = new MutableLiveData<>(new ArrayList<>());
         this.calls = new MutableLiveData<>((byte) 0);
