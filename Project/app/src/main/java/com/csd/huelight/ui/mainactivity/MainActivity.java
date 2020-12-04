@@ -1,5 +1,6 @@
 package com.csd.huelight.ui.mainactivity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView.setNavigationItemSelectedListener(this);
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toggle = new ActionBarDrawerToggle(this, this.drawerLayout, toolbar,
@@ -76,42 +79,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            default:
-
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    //Can be used to make a refresh button or something. Need to replace the inflater.
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.drawer_menu,menu);
-        return true;
-    }*/
-
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
-        init();
-    }
-
-    private void init() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
         NavigationUI.setupWithNavController(navigationView, navController);
+        toggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -119,17 +99,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LOGTAG, "onNavigationItemSelected called " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.nav_list:
-
-                // nav options to clear backstack
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setPopUpTo(R.id.navigation_graph, true)
-                        .build();
-
-                Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.lightBulbListFragment, null, navOptions);
+                if (isValidDestination(R.id.lightBulbListFragment)) {
+                    // nav options to clear backstack
+                    NavOptions navOptions = new NavOptions.Builder()
+                            .setPopUpTo(R.id.navigation_graph, true)
+                            .build();
+//                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.as_above);
+                    Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.lightBulbListFragment, null, navOptions);
+                       }
                 break;
             case R.id.nav_settings:
                 if (isValidDestination(R.id.settingsFragment)) {
                     Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.settingsFragment);
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true); //Set this to true if selecting "home" returns up by a single level in your UI rather than back to the top level or front page.
+                    getSupportActionBar().setDisplayShowHomeEnabled(true);
                 }
                 break;
         }
@@ -144,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment_container).getCurrentDestination().getId();
     }
 
-    //TODO Clear backstack from. When in huelight then click on settings. Screen has to change to list not huelight.
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
