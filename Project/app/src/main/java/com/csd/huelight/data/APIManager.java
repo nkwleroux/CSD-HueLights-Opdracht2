@@ -2,8 +2,6 @@ package com.csd.huelight.data;
 
 import android.util.Log;
 
-import com.csd.huelight.Util.Observable;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +22,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //Can also use @singleton instead of getinstance();
-public class APIManager extends Observable {
+public class APIManager extends ObservableLightBulbApiManager {
 
     //TODO Dummy data. Need to implement.
 
@@ -173,10 +171,6 @@ public class APIManager extends Observable {
                             }
 
                             setLightBulbs(lightBulbs);
-                            if (!discoSet) {
-                                setDisco(lightBulbs);
-                                discoSet = true;
-                            }
                             exception = null;
                         } catch (JSONException e) {
                             Log.e(LOGTAG, "Could not parse malformed JSON: \"" + jsonString + "\"", e);
@@ -197,7 +191,7 @@ public class APIManager extends Observable {
         newCall();
     }
 
-    private void setDisco(List<LightBulb> lightBulbs) {
+    public void setDisco(List<LightBulb> lightBulbs) {
         for (LightBulb lightBulb : lightBulbs) {
             JSONObject body = new JSONObject();
             try {
@@ -246,7 +240,7 @@ public class APIManager extends Observable {
     }
 
 
-        private void sendRequest(String url, String json, boolean retrieveAfter) {
+    private void sendRequest(String url, String json, boolean retrieveAfter) {
         RequestBody requestBody = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
