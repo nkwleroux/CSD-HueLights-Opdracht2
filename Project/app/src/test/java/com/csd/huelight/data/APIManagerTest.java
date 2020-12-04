@@ -234,6 +234,7 @@ public class APIManagerTest {
             "    }\n" +
             "}";
 
+    //geen tijd om te gebruiken voor tests.
     static String sampleResponseFromHueEmulatorWithError = "{\n" +
             "\"1\": {\n" +
             "        \"state\": {\n" +

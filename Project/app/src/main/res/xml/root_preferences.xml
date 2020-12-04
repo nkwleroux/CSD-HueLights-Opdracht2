@@ -1,34 +1,30 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Hue Bridge settings"
-        android:icon="@drawable/ic_baseline_settings_24">
+    <PreferenceCategory
+        android:icon="@drawable/ic_baseline_settings_24"
+        app:title="Hue Bridge settings">
 
         <EditTextPreference
-            app:key="IP"
-            app:title="IP address"
-            app:dialogTitle="IP address"
             android:digits="0123456789."
-            android:summary="De port waarop de hue bridge is"
-            app:useSimpleSummaryProvider="true"
-            android:defaultValue="10.0.0.2"/>
+            android:key="IP"
+            app:key="IP"
+            app:dialogTitle="IP address"
+            app:title="IP address"
+            />
 
         <EditTextPreference
-            app:key="PORT"
-            app:title="Port number"
-            app:dialogTitle="Port number"
             android:digits="0123456789"
-            android:summary="De port waarop de hue bridge is"
-            app:useSimpleSummaryProvider="true"
-            android:defaultValue="8000"/>
+            android:key="PORT_NUM"
+            app:key="PORT_NUM"
+            app:dialogTitle="Port number"
+            app:title="Port number" />
 
         <EditTextPreference
+            android:key="DEV_NAME"
             app:key="DEV_NAME"
-            app:title="Developer name"
             app:dialogTitle="Developer name"
-            android:summary="De developer naam voor de hue bridge"
-            app:useSimpleSummaryProvider="true"
-            android:defaultValue="newdeveloper"/>
+            app:title="Developer name" />
 
     </PreferenceCategory>
 

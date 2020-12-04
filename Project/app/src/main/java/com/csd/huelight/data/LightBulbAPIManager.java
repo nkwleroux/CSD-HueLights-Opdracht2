@@ -13,8 +13,6 @@ public interface LightBulbAPIManager {
 
     void retrieveLightBulbs();
 
-    void setDisco(List<LightBulb> lightBulbs);
-
     void setLightBulbState(LightBulb lightBulb);
 
     void setLightBulbName(LightBulb lightBulb);

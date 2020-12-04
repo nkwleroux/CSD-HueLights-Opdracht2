@@ -39,32 +39,6 @@ public class LightBulbRecyclerViewAdapter extends RecyclerView.Adapter<LightBulb
 
 
     public void updateLightBulbs(List<LightBulb> lightBulbs) {
-        //ugliest code in the land
-//        boolean updated = false;
-//        for (LightBulb lightBulb : lightBulbs){
-//            if (mValues.contains(lightBulb)){
-//                for (LightBulb oldLightBulb : mValues){
-//                    if (lightBulb.equals(oldLightBulb)){
-//                        if (!lightBulb.completeEqual(oldLightBulb)){
-//                            oldLightBulb.setSettings(lightBulb);
-//                            Log.i(LOGTAG, "lightBulb " + oldLightBulb.getUID() + " changed");
-//                            updated = true;
-//                        }
-//                        break;
-//                    }
-//                }
-//            }else {
-//                Log.i(LOGTAG, "lightBulb " + lightBulb.getUID() + " was added");
-//                mValues.add(lightBulb);
-//                updated = true;
-//            }
-//        }
-//
-//        if (updated){
-//            notifyDataSetChanged();
-//        }
-//        Log.i(LOGTAG, "updating lightBulbs " + lightBulbs.size());
-
         mValues.clear();
         mValues.addAll(lightBulbs);
         notifyDataSetChanged();

@@ -1,11 +1,14 @@
 package com.csd.huelight.ui.mainactivity.lightbulbdetail;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,8 @@ import com.csd.huelight.data.LightBulb;
 import com.csd.huelight.ui.mainactivity.LightBulbViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 public class LightBulbFragment extends Fragment {
 
@@ -25,6 +30,7 @@ public class LightBulbFragment extends Fragment {
 
     private LightBulbViewModel lightBulbViewModel;
     private LightBulb lightBulb;
+    private ImageView imageView;
 
     public static LightBulbFragment newInstance() {
         return new LightBulbFragment();
@@ -67,6 +73,7 @@ public class LightBulbFragment extends Fragment {
         {
             SetChipState("chipPower", chipPower, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
+            SetImageViewColor();
         });
 
         Slider sliderHue = getActivity().findViewById(R.id.sliderHue);
@@ -80,6 +87,7 @@ public class LightBulbFragment extends Fragment {
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 lightBulb.setHue((int) Math.abs(slider.getValue()));
                 lightBulbViewModel.setLightBulbState(lightBulb);
+                SetImageViewColor();
             }
         });
 
@@ -95,6 +103,7 @@ public class LightBulbFragment extends Fragment {
                 int value = (int) Math.abs(slider.getValue());
                 lightBulb.setSaturation((short) value);
                 lightBulbViewModel.setLightBulbState(lightBulb);
+                SetImageViewColor();
             }
         });
 
@@ -110,6 +119,7 @@ public class LightBulbFragment extends Fragment {
                 int value = (int) Math.abs(slider.getValue());
                 lightBulb.setBrightness((short) value);
                 lightBulbViewModel.setLightBulbState(lightBulb);
+                SetImageViewColor();
             }
         });
 
@@ -122,6 +132,33 @@ public class LightBulbFragment extends Fragment {
             SetChipState("chipColorLoop", chipColorLoop, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
         });
+
+        imageView = getActivity().findViewById(R.id.detailImageView);
+
+        Picasso.get()
+                .load(R.drawable.lightbulb)
+                .placeholder(R.drawable.ic_baseline_sync_24)
+                .error(R.drawable.ic_baseline_error_outline_24)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                       SetImageViewColor();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+    }
+
+    private void SetImageViewColor(){
+        imageView.setColorFilter(lightBulb.isOn() ? Color.HSVToColor(
+                new float[]{
+                        lightBulb.getHue() / (float) Short.MAX_VALUE * 180f,
+                        lightBulb.getSaturation() / 256f,
+                        lightBulb.getBrightness() / 256f}) : Color.WHITE,
+                PorterDuff.Mode.MULTIPLY);
     }
 
     private void SetChipState(String chipName, Chip chip, boolean state) {
