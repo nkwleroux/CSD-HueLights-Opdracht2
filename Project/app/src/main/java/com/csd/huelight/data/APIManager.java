@@ -121,6 +121,7 @@ public class APIManager extends Observable {
         synchronized (callsSynclock) {
             if (calls <= 0) {
                 //something went wrong
+//                Log.e(LOGTAG, "negative amount of calls is impossible", new IllegalArgumentException(calls + ""));
             } else {
                 setCalls((byte) (this.calls - 1));
             }
@@ -169,7 +170,7 @@ public class APIManager extends Observable {
                         }
 
                         setLightBulbs(lightBulbs);
-                        if(!discoSet){
+                        if (!discoSet) {
                             setDisco(lightBulbs);
                             discoSet = true;
                         }
@@ -188,8 +189,8 @@ public class APIManager extends Observable {
         newCall();
     }
 
-    private void setDisco(List<LightBulb> lightBulbs){
-        for (LightBulb lightBulb : lightBulbs){
+    private void setDisco(List<LightBulb> lightBulbs) {
+        for (LightBulb lightBulb : lightBulbs) {
             JSONObject body = new JSONObject();
             try {
 //                body.put("hue", 0);

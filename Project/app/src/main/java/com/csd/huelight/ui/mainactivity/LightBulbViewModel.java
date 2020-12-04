@@ -51,19 +51,15 @@ public class LightBulbViewModel extends ViewModel implements Observer {
     public void update(Observable source) {
         if (source instanceof APIManager) {
             APIManager apiManager = (APIManager) source;
-            if (apiManager.getException() == null) {
-                if (apiManager.getCalls() != this.calls.getValue()) {
-                    this.calls.postValue(apiManager.getCalls());
-                }
-                if (apiManager.getLightBulbs() != this.lightBulbs.getValue()) {
-                    this.lightBulbs.postValue(apiManager.getLightBulbs());
-                }
-            } else {
-                //do stuff
-                if (apiManager.getException().getMessage() != this.exceptionMessage.getValue()) {
+            if (apiManager.getException().getMessage() != this.exceptionMessage.getValue()) {
 //                    Log.e(LOGTAG, "observed exception", apiManager.getException());
-                    this.exceptionMessage.postValue(apiManager.getException().getMessage());
-                }
+                this.exceptionMessage.postValue(apiManager.getException().getMessage());
+            }
+            if (apiManager.getLightBulbs() != this.lightBulbs.getValue()) {
+                this.lightBulbs.postValue(apiManager.getLightBulbs());
+            }
+            if (apiManager.getCalls() != this.calls.getValue()) {
+                this.calls.postValue(apiManager.getCalls());
             }
         }
     }
