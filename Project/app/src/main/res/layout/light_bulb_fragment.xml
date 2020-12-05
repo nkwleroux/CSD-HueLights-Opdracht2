@@ -83,7 +83,7 @@
 
                     <TextView
                         android:id="@+id/textViewOn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="105dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="10dp"
@@ -125,7 +125,7 @@
 
                     <TextView
                         android:id="@+id/textViewHue"
-                        android:layout_width="wrap_content"
+                        android:layout_width="105dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="10dp"
@@ -169,7 +169,7 @@
 
                     <TextView
                         android:id="@+id/textViewSaturation"
-                        android:layout_width="wrap_content"
+                        android:layout_width="105dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="10dp"
@@ -212,7 +212,7 @@
 
                     <TextView
                         android:id="@+id/textviewBrightness"
-                        android:layout_width="wrap_content"
+                        android:layout_width="105dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="10dp"
@@ -267,7 +267,7 @@
 
                     <TextView
                         android:id="@+id/textViewColorloop"
-                        android:layout_width="wrap_content"
+                        android:layout_width="105dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="10dp"

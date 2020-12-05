@@ -1,16 +1,21 @@
 package com.csd.huelight.ui.mainactivity;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,25 +32,30 @@ import com.csd.huelight.R;
 import com.csd.huelight.data.APIManager;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import org.jetbrains.annotations.NotNull;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String LOGTAG = MainActivity.class.getName();
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
-    private Toolbar toolbar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         //navigation drawer
         this.navigationView = findViewById(R.id.nav_view);
         this.navigationView.setNavigationItemSelectedListener(this);
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toggle = new ActionBarDrawerToggle(this, this.drawerLayout, toolbar,
@@ -53,18 +63,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_close);
         toggle.syncState();
 
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                closeKeyboard();
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         //Viewmodel
         LightBulbViewModel lightBulbViewModel = ViewModelProviders.of(this).get(LightBulbViewModel.class);
         lightBulbViewModel.init(APIManager.getInstance());
 
-        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
         lightBulbViewModel.getCalls().observe(this, (calls) -> {
             Log.d(LOGTAG, "calles set to " + calls);
             if (calls < 0) {
                 Log.e(LOGTAG, "negative amount of calls is impossible", new IllegalArgumentException(calls + ""));
             }
-            if (calls == 0) {
+            if (calls == 0 || Navigation.findNavController(this, R.id.nav_host_fragment_container).getCurrentDestination().getId() != R.id.lightBulbListFragment) {
                 progressBar.setVisibility(View.INVISIBLE);
             } else {
                 progressBar.setVisibility(View.VISIBLE);
@@ -89,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggle.onConfigurationChanged(newConfig);
     }
@@ -97,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.d(LOGTAG, "onNavigationItemSelected called " + item.getItemId());
+        closeKeyboard();
         switch (item.getItemId()) {
             case R.id.nav_list:
                 if (isValidDestination(R.id.lightBulbListFragment)) {
@@ -110,9 +143,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_settings:
                 if (isValidDestination(R.id.settingsFragment)) {
+                    progressBar.setVisibility(View.INVISIBLE);
                     Navigation.findNavController(this, R.id.nav_host_fragment_container).navigate(R.id.settingsFragment);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true); //Set this to true if selecting "home" returns up by a single level in your UI rather than back to the top level or front page.
-                    getSupportActionBar().setDisplayShowHomeEnabled(true);
                 }
                 break;
         }
@@ -145,4 +177,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment_container), drawerLayout);
     }
+
+    private void closeKeyboard(){
+        View view = getCurrentFocus();
+        if (view != null){
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
+        }
+    }
+
 }

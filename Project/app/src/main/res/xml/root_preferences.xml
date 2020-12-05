@@ -3,28 +3,27 @@
 
     <PreferenceCategory
         android:icon="@drawable/ic_baseline_settings_24"
-        app:title="Hue Bridge settings">
+        app:title="@string/hue_bridge_settings">
 
         <EditTextPreference
             android:digits="0123456789."
             android:key="IP"
+            app:dialogTitle="@string/ip_address"
             app:key="IP"
-            app:dialogTitle="IP address"
-            app:title="IP address"
-            />
+            app:title="@string/ip_address"/>
 
         <EditTextPreference
             android:digits="0123456789"
             android:key="PORT_NUM"
+            app:dialogTitle="@string/port_number"
             app:key="PORT_NUM"
-            app:dialogTitle="Port number"
-            app:title="Port number" />
+            app:title="@string/port_number"/>
 
         <EditTextPreference
             android:key="DEV_NAME"
+            app:dialogTitle="@string/developer_name"
             app:key="DEV_NAME"
-            app:dialogTitle="Developer name"
-            app:title="Developer name" />
+            app:title="@string/developer_name"/>
 
     </PreferenceCategory>
 

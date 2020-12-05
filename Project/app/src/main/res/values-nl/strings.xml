@@ -1,2 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">HueLight</string>
+    <string name="temptext">TempText</string>
+    <string name="name">Naam :</string>
+    <string name="on">Aan :</string>
+    <string name="power_on">Stroom aan</string>
+    <string name="power_off">Stroom uit</string>
+    <string name="rainbow">Regenboog</string>
+    <string name="none">Geen</string>
+    <string name="name_of_lamp">Naam van lamp</string>
+    <string name="hue">Hue :</string>
+    <string name="saturation">Verzadiging :</string>
+    <string name="brightness">Helderheid:</string>
+    <string name="uniqueid">UniqueID :</string>
+    <string name="colorloop">Colorloop :</string>
+    <string name="save_changes">Wijzigingen opslaan</string>
+    <string name="navigation_drawer_open">Open de navigatielade</string>
+    <string name="navigation_drawer_close">Sluit de navigatielade</string>
+    <string name="settings">Instellingen</string>
+    <string name="lightbulb_list">Gloeilamp lijst</string>
+    <string name="lightbulb_name">Gloeilamp naam</string>
+    <string name="csd_opdracht_2">CSD opdracht 2</string>
+    <string name="made_by_nicholas_and_shinichi">Gemaakt door Nicholas en Shinichi</string>
+    <string name="appicon">AppIcoon</string>
+    <string name="hue_bridge_settings">Hue Bridge instellingen</string>
+    <string name="ip_address">IP address</string>
+    <string name="port_number">Poortnummer</string>
+    <string name="developer_name">Naam ontwikkelaar</string>
+</resources>

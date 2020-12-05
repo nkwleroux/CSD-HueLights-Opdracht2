@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,7 @@ public class LightBulbFragment extends Fragment {
     private LightBulbViewModel lightBulbViewModel;
     private LightBulb lightBulb;
     private ImageView imageView;
+    private EditText name;
 
     public static LightBulbFragment newInstance() {
         return new LightBulbFragment();
@@ -46,6 +49,9 @@ public class LightBulbFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        ProgressBar progressBar = getActivity().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         this.lightBulbViewModel = ViewModelProviders.of(getActivity()).get(LightBulbViewModel.class);
 
         int position = getArguments().getInt("lightbulb");
@@ -54,26 +60,27 @@ public class LightBulbFragment extends Fragment {
         TextView UID = getActivity().findViewById(R.id.textViewUniqueID);
         UID.setText(lightBulb.getUID());
 
-        EditText name = getActivity().findViewById(R.id.editTextName);
+        name = getActivity().findViewById(R.id.editTextName);
         name.setText(lightBulb.getName());
         name.setOnFocusChangeListener((v, hasFocus) -> {
 //            Log.d(LOGTAG, "focuschanged " + hasFocus);
             if (!hasFocus) {
                 lightBulb.setName(name.getText().toString());
                 lightBulbViewModel.setLightBulbName(lightBulb);
+                closeKeyboard();
             }
         });
-
+        name.setFocusableInTouchMode(true);
 
         Chip chipPower = getActivity().findViewById(R.id.chipOn);
 
         SetChipState("chipPower", chipPower, lightBulb.isOn());
         chipPower.setOnCheckedChangeListener((compoundButton, isChecked) ->
-
         {
             SetChipState("chipPower", chipPower, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
             SetImageViewColor();
+            closeKeyboard();
         });
 
         Slider sliderHue = getActivity().findViewById(R.id.sliderHue);
@@ -88,6 +95,7 @@ public class LightBulbFragment extends Fragment {
                 lightBulb.setHue((int) Math.abs(slider.getValue()));
                 lightBulbViewModel.setLightBulbState(lightBulb);
                 SetImageViewColor();
+                closeKeyboard();
             }
         });
 
@@ -104,6 +112,7 @@ public class LightBulbFragment extends Fragment {
                 lightBulb.setSaturation((short) value);
                 lightBulbViewModel.setLightBulbState(lightBulb);
                 SetImageViewColor();
+                closeKeyboard();
             }
         });
 
@@ -120,6 +129,7 @@ public class LightBulbFragment extends Fragment {
                 lightBulb.setBrightness((short) value);
                 lightBulbViewModel.setLightBulbState(lightBulb);
                 SetImageViewColor();
+                closeKeyboard();
             }
         });
 
@@ -131,6 +141,8 @@ public class LightBulbFragment extends Fragment {
         {
             SetChipState("chipColorLoop", chipColorLoop, isChecked);
             lightBulbViewModel.setLightBulbState(lightBulb);
+            SetImageViewColor();
+            closeKeyboard();
         });
 
         imageView = getActivity().findViewById(R.id.detailImageView);
@@ -150,6 +162,12 @@ public class LightBulbFragment extends Fragment {
 
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        name.clearFocus();
     }
 
     private void SetImageViewColor(){
@@ -180,6 +198,15 @@ public class LightBulbFragment extends Fragment {
                     chip.setText(getString(R.string.none));
                 }
                 break;
+        }
+    }
+
+    private void closeKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null){
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
         }
     }
 
